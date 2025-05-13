@@ -366,15 +366,11 @@
         return;
       }
 
-      Swal.fire({
-        title: 'กำลังตรวจสอบข้อมูล...',
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading(),
-        width: 'clamp(300px, 90%, 420px)',
-        customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
-      });
+      Swal.fire({ title: 'กำลังตรวจสอบข้อมูล...', didOpen: () => Swal.showLoading() });
+
       try {
-        const status = await jsonp(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
+        const res = await fetch(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
+        const status = await res.json();
 
         Swal.close();
 
@@ -400,23 +396,9 @@
       startButton.style.display = "inline-block";
 
         } else {
-          Swal.fire({
-              title: 'กำลังเข้าสู่แบบทดสอบ',
-              html: 'กรุณารอสักครู่...',
-              allowOutsideClick: false,
-              allowEscapeKey: false,
-              didOpen: () => {
-                Swal.showLoading();
-              },
-            width: 'clamp(300px, 90%, 420px)', // Responsive width
-            confirmButtonText: 'ตกลง',
-            confirmButtonColor: '#2563eb', // สีปุ่มน้ำเงินแบบ Tailwind blue-600
-            customClass: {
-              title: 'swal2-title-custom',
-              popup: 'swal2-border'
-            }
-          });
-          questions = await jsonp(`${SCRIPT_URL}?action=getQuestions`);
+          Swal.fire({ title: 'กำลังโหลดคำถาม...', didOpen: () => Swal.showLoading() });
+          const qres = await fetch(`${SCRIPT_URL}?action=getQuestions`);
+          questions = await qres.json();
           Swal.close();
           document.getElementById("quizForm").style.display = "block";
           document.getElementById("infoForm").style.display = "none";
@@ -508,7 +490,6 @@
       this.value = parts.filter(Boolean).join("-");
     });
   </script>
-
 </body>
 
 </html>
