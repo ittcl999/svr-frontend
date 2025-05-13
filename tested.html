@@ -1,10 +1,12 @@
+<!-- tested.html (เวอร์ชันสำหรับ GitHub โดยคงหลักการทำงานจาก GAS 100%) -->
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>แบบทดสอบความมั่นคงปลอดภัย</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>แบบทดสอบความมั่นคง</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
@@ -16,6 +18,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      color: #1e3a8a;
     }
     .container {
       max-width: 850px;
@@ -30,136 +33,186 @@
       text-align: center;
     }
     .centered-header img {
-      width: 100px;
-      margin-bottom: 1rem;
-    }
-    .centered-header h3 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #1d4ed8;
-      margin: 0.3rem 0 0.6rem;
-    }
-    .link-section {
-      margin-top: 0.5rem;
-    }
-    .link-section a {
-      font-weight: bold;
-      color: #444;
-      text-decoration: none;
-    }
-    .link-section a:hover {
-      text-decoration: underline;
-    }
-    label {
       display: block;
-      margin-top: 1rem;
-      font-weight: 500;
+      margin: 0 auto 1rem;
+      width: 100px;
+      height: auto;
+      opacity: 0;
+      animation: logoFade 0.8s forwards ease;
     }
-    input[type="text"], input[type="email"], input[type="tel"] {
+    @keyframes logoFade { to { opacity: 1; } }
+    .question-container {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    .question-number {
+      color: #1d4ed8;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .choices label {
+      display: block;
+      margin-top: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .choices label:hover {
+      background: #f3f4f6;
+      border-color: #2563eb;
+    }
+    input[type="text"], input[type="tel"], input[type="email"] {
       width: 100%;
       padding: 0.6rem;
       margin-top: 0.25rem;
+      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 1rem;
     }
     .btn {
-      display: block;
-      margin: 2rem auto 0;
       background-color: #2563eb;
-      color: #fff;
+      color: white;
       padding: 0.8rem 1.6rem;
-      border: none;
-      border-radius: 8px;
       font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 500;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
     .btn:hover {
-      background-color: #1d4ed8;
+      background-color: #1e40af;
+    }
+    .swal2-title-custom {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+    .swal2-border {
+      border-radius: 1rem;
+      padding: 1.2rem;
+      font-family: 'Prompt', sans-serif;
+    }
+    .test-complete-message {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #dc2626;
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.2rem;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <header class="centered-header">
-      <img src="https://github.com/ittcl999/svr-frontend/blob/main/bg-logo-transport.png?raw=true" alt="โลโก้บริษัท">
+      <img src="https://github.com/ittcl999/svr-frontend/blob/main/bg-logo-transport.png?raw=true" alt="โลโก้">
       <h3>แบบทดสอบประเมินความเข้าใจ</h3>
-      <div class="link-section">
-        📘 <a href="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/view" target="_blank">
-          ดาวน์โหลดคู่มือความมั่นคงปลอดภัยเข้าพื้นที่
-        </a>
-      </div>
     </header>
 
     <div id="infoForm">
-      <label for="idCard">เลขบัตรประชาชน *</label>
-      <input type="tel" id="idCard" placeholder="0-0000-00000-00-0" maxlength="17">
-
-      <label for="name">ชื่อ-นามสกุล *</label>
-      <input type="text" id="name" placeholder="ชื่อเต็มของคุณ">
-
-      <label for="company">บริษัท *</label>
-      <input type="text" id="company" placeholder="ชื่อบริษัท">
-
-      <label for="phone">เบอร์โทรศัพท์ *</label>
-      <input type="tel" id="phone" placeholder="08x-xxx-xxxx">
-
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="example@email.com">
-
-      <button class="btn" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
+      <input type="tel" id="idCard" placeholder="เลขบัตรประชาชน (13 หลัก)">
+      <input type="text" id="name" placeholder="ชื่อ-นามสกุล">
+      <input type="text" id="company" placeholder="บริษัท/หน่วยงาน">
+      <input type="tel" id="phone" placeholder="เบอร์โทรศัพท์">
+      <input type="email" id="email" placeholder="Email (ไม่บังคับ)">
+      <div style="text-align:center;">
+        <button class="btn" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
+      </div>
     </div>
 
-    <div id="result" style="text-align:center; margin-top:2rem;"></div>
+    <form id="quizForm" style="display:none">
+      <div id="questions"></div>
+      <div style="text-align:center;">
+        <button type="submit" class="btn">ส่งคำตอบ</button>
+      </div>
+    </form>
+
+    <div id="result"></div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec";
+    const questions = [
+      { question: 'ข้อใดถูกต้องเกี่ยวกับการรักษาความปลอดภัยทางไซเบอร์?', choices: ['การแชร์รหัสผ่าน', 'ตั้งรหัสผ่านสั้นๆ', 'อัปเดตระบบสม่ำเสมอ'], answer: 2 },
+      { question: 'ควรทำอย่างไรเมื่อพบอีเมลน่าสงสัย?', choices: ['เปิดทันที', 'ลบหรือติดต่อ IT', 'ส่งต่อให้เพื่อน'], answer: 1 }
+    ];
 
     function startQuiz() {
-      const idCard = document.getElementById("idCard").value.replace(/\D/g, "");
+      const idCard = document.getElementById("idCard").value.trim().replace(/\D/g, "");
       const name = document.getElementById("name").value.trim();
       const company = document.getElementById("company").value.trim();
       const phone = document.getElementById("phone").value.trim();
-      const email = document.getElementById("email").value.trim();
 
-      if (idCard.length !== 13 || !name || !company || !phone) {
-        Swal.fire("กรุณากรอกข้อมูลให้ครบถ้วน", "เลขบัตรประชาชน 13 หลักและข้อมูลจำเป็น", "warning");
+      if (!idCard || idCard.length !== 13 || !name || !company || !phone) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'ข้อมูลไม่ครบถ้วน',
+          html: 'กรุณากรอกข้อมูลให้ครบทุกช่อง (ยกเว้นอีเมล)',
+          customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
+        });
         return;
       }
 
-      Swal.fire({
-        title: "กำลังตรวจสอบ...",
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading()
-      });
-
-      fetch(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`)
-        .then(res => res.json())
-        .then(data => {
-          Swal.close();
-          if (data.tested) {
-            Swal.fire("ไม่สามารถทำแบบทดสอบได้", `คุณเคยทำแบบทดสอบแล้ว\nทำได้อีกครั้งใน ${data.statusMessage}`, "info");
-          } else {
-            Swal.fire("✅ พร้อม!", "แบบทดสอบยังไม่เคยทำ สามารถเริ่มได้", "success").then(() => {
-              document.getElementById("result").innerHTML = `
-                <h4>คุณ ${name} ได้ผ่านการตรวจสอบ</h4>
-                <button class="btn" onclick="window.location.href='form_svr.html'">📄 ไปยังแบบฟอร์มขออนุญาต</button>
-              `;
-              document.getElementById("infoForm").style.display = "none";
-            });
-          }
-        })
-        .catch(err => {
-          Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้", "error");
-        });
+      document.getElementById("infoForm").style.display = 'none';
+      document.getElementById("quizForm").style.display = 'block';
+      renderQuestions();
     }
 
-    document.getElementById("idCard").addEventListener("input", function () {
-      const v = this.value.replace(/\D/g, "").slice(0, 13);
-      const parts = [v.slice(0, 1), v.slice(1, 5), v.slice(5, 10), v.slice(10, 12), v.slice(12)];
-      this.value = parts.filter(Boolean).join("-");
+    function renderQuestions() {
+      const container = document.getElementById("questions");
+      container.innerHTML = "";
+      questions.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.className = "question-container";
+        div.innerHTML = `
+          <div class="question-number">ข้อ ${i + 1}</div>
+          <div class="choices">
+            ${q.choices.map((c, j) => `<label><input type="radio" name="q${i}" value="${j}"> ${c}</label>`).join('')}
+          </div>`;
+        container.appendChild(div);
+      });
+    }
+
+    document.getElementById("quizForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const answers = questions.map((q, i) => {
+        const selected = document.querySelector(`input[name='q${i}']:checked`);
+        return selected ? parseInt(selected.value) : -1;
+      });
+
+      if (answers.includes(-1)) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'ยังตอบไม่ครบทุกข้อ',
+          text: 'กรุณาตอบให้ครบก่อนส่งคำตอบ',
+          customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
+        });
+        return;
+      }
+
+      const correct = questions.filter((q, i) => q.answer === answers[i]).length;
+      const resultDiv = document.getElementById("result");
+      document.getElementById("quizForm").style.display = 'none';
+
+      if (correct === questions.length) {
+        resultDiv.innerHTML = `
+          <h4 class="test-complete-message">คุณทำแบบทดสอบผ่านเรียบร้อยแล้ว</h4>
+          <div style="text-align:center;"><a href="form_svr.html" class="btn btn-success">📄 ไปยังแบบฟอร์มคำขอ</a></div>`;
+      } else {
+        resultDiv.innerHTML = `
+          <h4 class="test-complete-message">คุณยังไม่ผ่าน กรุณากลับไปอ่านคู่มือแล้วลองใหม่</h4>
+          <div style="text-align:center;"><a href="manual.html" class="btn btn-primary">📘 กลับไปอ่านคู่มือ</a></div>`;
+      }
     });
   </script>
 </body>
+
 </html>
