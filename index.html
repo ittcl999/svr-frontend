@@ -1,17 +1,13 @@
+<!-- Home.html -->
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ระบบรวมกลาง - บริษัท ขนส่ง จำกัด</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Prompt', sans-serif;
-    }
-
+    * { box-sizing: border-box; font-family: 'Prompt', sans-serif; }
     body {
       margin: 0;
       padding: 0;
@@ -22,7 +18,6 @@
       min-height: 100vh;
       color: #1e3a8a;
     }
-
     .container {
       max-width: 700px;
       width: 100%;
@@ -34,45 +29,26 @@
       text-align: center;
       animation: fadeIn 0.4s ease-in;
     }
-
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
     header img {
       width: 100px;
       height: auto;
       margin-bottom: 1rem;
-      opacity: 0;
       animation: logoFade 0.8s forwards ease;
     }
-
     @keyframes logoFade {
-      to {
-        opacity: 1;
-      }
+      to { opacity: 1; }
     }
-
     h3 {
       font-size: 1.4rem;
       font-weight: 600;
       color: #1d4ed8;
       margin: 0.3rem 0 0.6rem;
     }
-
-    p {
-      font-size: 1rem;
-      margin-bottom: 2rem;
-      color: #444;
-    }
-
+    p { font-size: 1rem; margin-bottom: 2rem; color: #444; }
     .btn {
       display: block;
       width: 100%;
@@ -87,33 +63,13 @@
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-      font-family: 'Prompt', sans-serif;
     }
-
-    .btn-primary {
-      background-color: #2563eb;
-    }
-
-    .btn-primary:hover {
-      background-color: #1e40af;
-    }
-
-    .btn-success {
-      background-color: #059669;
-    }
-
-    .btn-success:hover {
-      background-color: #047857;
-    }
-
-    .btn-info {
-      background-color: #475569;
-    }
-
-    .btn-info:hover {
-      background-color: #334155;
-    }
-
+    .btn-primary { background-color: #2563eb; }
+    .btn-primary:hover { background-color: #1e40af; }
+    .btn-success { background-color: #059669; }
+    .btn-success:hover { background-color: #047857; }
+    .btn-info { background-color: #475569; }
+    .btn-info:hover { background-color: #334155; }
     footer {
       text-align: center;
       font-size: 0.85rem;
@@ -122,7 +78,6 @@
     }
   </style>
 </head>
-
 <body>
   <div class="container">
     <header>
@@ -144,11 +99,10 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/PASTE-YOUR-ID-HERE/exec";  // 🔁 แก้ตรงนี้
+    const SCRIPT_URL = "https://script.google.com/macros/s/xxxxxxxxxxxxxxxxxxxxxxx/exec"; // ❗ใส่ URL ของคุณ
     function goTo(action) {
       window.location.href = `${SCRIPT_URL}?action=${action}`;
     }
   </script>
 </body>
-
 </html>
