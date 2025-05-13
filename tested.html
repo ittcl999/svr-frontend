@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    body {
+    bbody {
       font-family: 'Prompt', sans-serif;
       margin: 0;
       padding: 0;
@@ -146,11 +146,10 @@
     }
 
     .swal2-border {
-      border-radius: 1rem;
-      /* มุมโค้งมนสวย */
+      border-radius: 1rem !important;
+      font-family: 'Prompt', sans-serif;
       padding: 1.2rem;
     }
-
 
     .question-container {
       background: #ffffff;
@@ -367,27 +366,57 @@
         return;
       }
 
-      Swal.fire({ title: 'กำลังตรวจสอบข้อมูล...', didOpen: () => Swal.showLoading() });
-
+      Swal.fire({
+        title: 'กำลังตรวจสอบข้อมูล...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        width: 'clamp(300px, 90%, 420px)',
+        customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
+      });
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
-        const status = await res.json();
+        const status = await jsonp(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
 
         Swal.close();
 
         if (status.tested) {
-          Swal.fire({
+         Swal.fire({
             icon: 'info',
-            title: 'ได้ทำแบบทดสอบแล้ว',
-            html: `สอบครั้งถัดไป: <strong>${status.statusMessage}</strong>`,
-            confirmButtonText: 'ตกลง'
-          });
-          startButton.disabled = false;
-          startButton.style.display = "inline-block";
+            title: 'ได้ทำแบบทดสอบไปแล้ว', 
+            html: `<span style="font-size: 1em; color: #ff0000;">พบว่าหมายเลขบัตรประชาชนดังกล่าว</span><br>
+                   มีการทำแบบทดสอบเรียบร้อยแล้ว<br>
+                   สามารถเข้าสอบครั้งถัดไปได้ใน<br>
+                   <span style="font-size: 1em; color: #0062ff;">วันที่ ${status.statusMessage}</span>
+                    `, 
+            confirmButtonText: 'รับทราบ' ,
+            width: 'clamp(300px, 90%, 420px)', // Responsive width
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#2563eb', // สีปุ่มน้ำเงินแบบ Tailwind blue-600
+            customClass: {
+            title: 'swal2-title-custom',
+            popup: 'swal2-border'
+          }
+        });
+      startButton.disabled = false;
+      startButton.style.display = "inline-block";
+
         } else {
-          Swal.fire({ title: 'กำลังโหลดคำถาม...', didOpen: () => Swal.showLoading() });
-          const qres = await fetch(`${SCRIPT_URL}?action=getQuestions`);
-          questions = await qres.json();
+          Swal.fire({
+              title: 'กำลังเข้าสู่แบบทดสอบ',
+              html: 'กรุณารอสักครู่...',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            width: 'clamp(300px, 90%, 420px)', // Responsive width
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#2563eb', // สีปุ่มน้ำเงินแบบ Tailwind blue-600
+            customClass: {
+              title: 'swal2-title-custom',
+              popup: 'swal2-border'
+            }
+          });
+          questions = await jsonp(`${SCRIPT_URL}?action=getQuestions`);
           Swal.close();
           document.getElementById("quizForm").style.display = "block";
           document.getElementById("infoForm").style.display = "none";
@@ -479,6 +508,7 @@
       this.value = parts.filter(Boolean).join("-");
     });
   </script>
+
 </body>
 
 </html>
