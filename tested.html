@@ -1,101 +1,165 @@
-<!-- tested.html (แบบทดสอบประเมินความเข้าใจ) -->
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>แบบทดสอบความมั่นคง</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <title>แบบทดสอบความมั่นคงปลอดภัย</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
-      margin: 0;
-      padding: 2rem;
       font-family: 'Prompt', sans-serif;
+      margin: 0;
+      padding: 0;
       background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
-      color: #1e3a8a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
     .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      text-align: left;
+      max-width: 850px;
+      width: 100%;
+      background-color: #ffffff;
+      padding: 2.5rem 3rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      margin: 2rem;
     }
-    h2 {
+    .centered-header {
       text-align: center;
-      color: #1d4ed8;
     }
-    .question {
-      margin: 1.2rem 0;
+    .centered-header img {
+      width: 100px;
+      margin-bottom: 1rem;
+    }
+    .centered-header h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #1d4ed8;
+      margin: 0.3rem 0 0.6rem;
+    }
+    .link-section {
+      margin-top: 0.5rem;
+    }
+    .link-section a {
+      font-weight: bold;
+      color: #444;
+      text-decoration: none;
+    }
+    .link-section a:hover {
+      text-decoration: underline;
     }
     label {
       display: block;
-      margin: 0.5rem 0;
-      cursor: pointer;
+      margin-top: 1rem;
+      font-weight: 500;
     }
-    button {
-      background-color: #2563eb;
-      color: white;
-      padding: 0.8rem 1.6rem;
+    input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
       font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+    }
+    .btn {
       display: block;
       margin: 2rem auto 0;
+      background-color: #2563eb;
+      color: #fff;
+      padding: 0.8rem 1.6rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
     }
-    button:hover {
-      background-color: #1e40af;
+    .btn:hover {
+      background-color: #1d4ed8;
     }
   </style>
 </head>
-
 <body>
   <div class="container">
-    <h2>📝 แบบทดสอบความเข้าใจเรื่องความมั่นคง</h2>
+    <header class="centered-header">
+      <img src="https://github.com/ittcl999/svr-frontend/blob/main/bg-logo-transport.png?raw=true" alt="โลโก้บริษัท">
+      <h3>แบบทดสอบประเมินความเข้าใจ</h3>
+      <div class="link-section">
+        📘 <a href="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/view" target="_blank">
+          ดาวน์โหลดคู่มือความมั่นคงปลอดภัยเข้าพื้นที่
+        </a>
+      </div>
+    </header>
 
-    <div class="question">
-      <strong>1. ข้อใดถูกต้องเกี่ยวกับการรักษาความปลอดภัยทางไซเบอร์?</strong>
-      <label><input type="radio" name="q1" value="a"> การแชร์รหัสผ่านให้เพื่อนร่วมงาน</label>
-      <label><input type="radio" name="q1" value="b"> การตั้งรหัสผ่านสั้นๆ เพื่อจำง่าย</label>
-      <label><input type="radio" name="q1" value="c"> การอัปเดตระบบอย่างสม่ำเสมอ</label>
+    <div id="infoForm">
+      <label for="idCard">เลขบัตรประชาชน *</label>
+      <input type="tel" id="idCard" placeholder="0-0000-00000-00-0" maxlength="17">
+
+      <label for="name">ชื่อ-นามสกุล *</label>
+      <input type="text" id="name" placeholder="ชื่อเต็มของคุณ">
+
+      <label for="company">บริษัท *</label>
+      <input type="text" id="company" placeholder="ชื่อบริษัท">
+
+      <label for="phone">เบอร์โทรศัพท์ *</label>
+      <input type="tel" id="phone" placeholder="08x-xxx-xxxx">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="example@email.com">
+
+      <button class="btn" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
     </div>
 
-    <div class="question">
-      <strong>2. ควรทำอย่างไรเมื่อพบอีเมลน่าสงสัย?</strong>
-      <label><input type="radio" name="q2" value="a"> เปิดทันทีเพื่อดูว่าเป็นใคร</label>
-      <label><input type="radio" name="q2" value="b"> ลบออกหรือติดต่อฝ่าย IT</label>
-      <label><input type="radio" name="q2" value="c"> ส่งต่อให้เพื่อนร่วมงานช่วยดู</label>
-    </div>
-
-    <button onclick="submitQuiz()">ส่งคำตอบ</button>
+    <div id="result" style="text-align:center; margin-top:2rem;"></div>
   </div>
 
   <script>
-    function submitQuiz() {
-      const q1 = document.querySelector('input[name="q1"]:checked');
-      const q2 = document.querySelector('input[name="q2"]:checked');
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec";
 
-      if (!q1 || !q2) {
-        Swal.fire('กรุณาตอบให้ครบทุกข้อ', '', 'warning');
+    function startQuiz() {
+      const idCard = document.getElementById("idCard").value.replace(/\D/g, "");
+      const name = document.getElementById("name").value.trim();
+      const company = document.getElementById("company").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (idCard.length !== 13 || !name || !company || !phone) {
+        Swal.fire("กรุณากรอกข้อมูลให้ครบถ้วน", "เลขบัตรประชาชน 13 หลักและข้อมูลจำเป็น", "warning");
         return;
       }
 
-      const score = (q1.value === 'c' ? 1 : 0) + (q2.value === 'b' ? 1 : 0);
+      Swal.fire({
+        title: "กำลังตรวจสอบ...",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
 
-      if (score === 2) {
-        Swal.fire('✅ ผ่าน', 'คุณตอบถูกครบทุกข้อ', 'success').then(() => {
-          window.location.href = 'form_svr.html';
+      fetch(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`)
+        .then(res => res.json())
+        .then(data => {
+          Swal.close();
+          if (data.tested) {
+            Swal.fire("ไม่สามารถทำแบบทดสอบได้", `คุณเคยทำแบบทดสอบแล้ว\nทำได้อีกครั้งใน ${data.statusMessage}`, "info");
+          } else {
+            Swal.fire("✅ พร้อม!", "แบบทดสอบยังไม่เคยทำ สามารถเริ่มได้", "success").then(() => {
+              document.getElementById("result").innerHTML = `
+                <h4>คุณ ${name} ได้ผ่านการตรวจสอบ</h4>
+                <button class="btn" onclick="window.location.href='form_svr.html'">📄 ไปยังแบบฟอร์มขออนุญาต</button>
+              `;
+              document.getElementById("infoForm").style.display = "none";
+            });
+          }
+        })
+        .catch(err => {
+          Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้", "error");
         });
-      } else {
-        Swal.fire('❌ ไม่ผ่าน', 'กรุณาศึกษาคู่มืออีกครั้งแล้วลองใหม่', 'error');
-      }
     }
+
+    document.getElementById("idCard").addEventListener("input", function () {
+      const v = this.value.replace(/\D/g, "").slice(0, 13);
+      const parts = [v.slice(0, 1), v.slice(1, 5), v.slice(5, 10), v.slice(10, 12), v.slice(12)];
+      this.value = parts.filter(Boolean).join("-");
+    });
   </script>
 </body>
-
 </html>
