@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบรวมกลาง - บริษัท ขนส่ง จำกัด</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+      text-align: center;
+      padding: 40px;
+    }
+    .btn {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 300px;
+    }
+    .btn:hover {
+      background-color: #1e40af;
+    }
+  </style>
+</head>
+<body>
+  <h2>🏢 ระบบรวมกลาง - ขออนุญาตเข้าพื้นที่</h2>
+  <button class="btn" onclick="goTo('manual')">📘 คู่มือความมั่นคง</button>
+  <button class="btn" onclick="goTo('tested')">📝 แบบทดสอบ</button>
+  <button class="btn" onclick="goTo('viewForm')">📄 แบบฟอร์มขออนุญาต</button>
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec";
+    function goTo(action) {
+      window.location.href = `${SCRIPT_URL}?action=${action}`;
+    }
+  </script>
+</body>
+</html>
