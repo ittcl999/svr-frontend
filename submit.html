@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ส่งคำขอ</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/svr-api.js"></script>
+</head>
+<body>
+  <h2>📄 ส่งฟอร์มคำขอเข้าพื้นที่</h2>
+  <form id="form">
+    <input type="text" placeholder="ชื่อผู้ขอ" id="requester"><br>
+    <input type="text" placeholder="บริษัท" id="company"><br>
+    <input type="text" placeholder="โครงการ" id="project"><br>
+    <button type="submit">🚀 ส่งคำขอ</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    document.getElementById('form').onsubmit = async function (e) {
+      e.preventDefault();
+      const payload = {
+        input2: document.getElementById('requester').value,
+        input3: document.getElementById('company').value,
+        input6: document.getElementById('project').value
+      };
+      const res = await submitFormData(payload);
+      document.getElementById('result').innerText = res.status === 'success'
+        ? `✅ ส่งคำขอสำเร็จ! หมายเลข: ${res.noSVR}`
+        : `❌ เกิดข้อผิดพลาด: ${res.message}`;
+    };
+  </script>
+</body>
+</html>
