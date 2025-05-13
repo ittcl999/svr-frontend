@@ -367,7 +367,13 @@
         return;
       }
 
-      Swal.fire({ title: 'กำลังตรวจสอบข้อมูล...', didOpen: () => Swal.showLoading() });
+       Swal.fire({
+        title: 'กำลังตรวจสอบข้อมูล...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        width: 'clamp(300px, 90%, 420px)',
+        customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
+      });
 
       try {
         const res = await fetch(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
@@ -376,16 +382,42 @@
         Swal.close();
 
         if (status.tested) {
-          Swal.fire({
-            icon: 'info',
-            title: 'ได้ทำแบบทดสอบแล้ว',
-            html: `สอบครั้งถัดไป: <strong>${status.statusMessage}</strong>`,
-            confirmButtonText: 'ตกลง'
+           Swal.fire({
+              icon: 'info',
+              title: 'ได้ทำแบบทดสอบไปแล้ว', 
+              html: `<span style="font-size: 1em; color: #ff0000;">พบว่าหมายเลขบัตรประชาชนดังกล่าว</span><br>
+                     มีการทำแบบทดสอบเรียบร้อยแล้ว<br>
+                     สามารถเข้าสอบครั้งถัดไปได้ใน<br>
+                     <span style="font-size: 1em; color: #0062ff;">วันที่ ${status.statusMessage}</span>
+                      `, 
+              confirmButtonText: 'รับทราบ' ,
+              width: 'clamp(300px, 90%, 420px)', // Responsive width
+              confirmButtonText: 'ตกลง',
+              confirmButtonColor: '#2563eb', // สีปุ่มน้ำเงินแบบ Tailwind blue-600
+              customClass: {
+              title: 'swal2-title-custom',
+              popup: 'swal2-border'
+            }
           });
-          startButton.disabled = false;
-          startButton.style.display = "inline-block";
+        startButton.disabled = false;
+        startButton.style.display = "inline-block";
         } else {
-          Swal.fire({ title: 'กำลังโหลดคำถาม...', didOpen: () => Swal.showLoading() });
+           Swal.fire({
+              title: 'กำลังเข้าสู่แบบทดสอบ',
+              html: 'กรุณารอสักครู่...',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            width: 'clamp(300px, 90%, 420px)', // Responsive width
+            confirmButtonText: 'ตกลง',
+            confirmButtonColor: '#2563eb', // สีปุ่มน้ำเงินแบบ Tailwind blue-600
+            customClass: {
+              title: 'swal2-title-custom',
+              popup: 'swal2-border'
+            }
+          });
           const qres = await fetch(`${SCRIPT_URL}?action=getQuestions`);
           questions = await qres.json();
           Swal.close();
@@ -436,7 +468,17 @@
       });
 
       if (answers.includes(-1)) {
-        Swal.fire({ icon: 'warning', title: 'ยังตอบไม่ครบทุกข้อ', text: 'กรุณาตอบให้ครบทุกข้อ' });
+         Swal.fire({
+          icon: 'warning',
+          title: 'ยังตอบไม่ครบทุกข้อ',
+          text: `กรุณาตอบคำถามให้ครบก่อนส่งคำตอบ (เช่น ข้อที่ ${unanswered + 1})`,
+          width: 'clamp(300px, 90%, 420px)',
+          confirmButtonColor: '#2563eb',
+          customClass: {
+            title: 'swal2-title-custom',
+            popup: 'swal2-border'
+          }
+        });
         submitBtn.disabled = false;
         submitBtn.style.display = "inline-block";
         return;
