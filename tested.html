@@ -374,8 +374,7 @@
         customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
       });
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
-        const status = await res.json();
+        const status = await jsonp(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
 
         Swal.close();
 
@@ -417,8 +416,7 @@
               popup: 'swal2-border'
             }
           });
-          const qres = await fetch(`${SCRIPT_URL}?action=getQuestions`);
-          questions = await qres.json();
+          questions = await jsonp(`${SCRIPT_URL}?action=getQuestions`);
           Swal.close();
           document.getElementById("quizForm").style.display = "block";
           document.getElementById("infoForm").style.display = "none";
@@ -509,6 +507,23 @@
       const parts = [v.slice(0, 1), v.slice(1, 5), v.slice(5, 10), v.slice(10, 12), v.slice(12, 13)];
       this.value = parts.filter(Boolean).join("-");
     });
+  </script>
+
+  <script>
+    function jsonp(url) {
+      return new Promise((resolve, reject) => {
+        const name = `jsonp_cb_${Date.now()}`;
+        window[name] = (data) => {
+          delete window[name];
+          document.body.removeChild(script);
+          resolve(data);
+        };
+        const script = document.createElement('script');
+        script.src = `${url}&callback=${name}`;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    }
   </script>
 </body>
 
