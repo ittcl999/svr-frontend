@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    bbody {
+    body {
       font-family: 'Prompt', sans-serif;
       margin: 0;
       padding: 0;
@@ -146,10 +146,11 @@
     }
 
     .swal2-border {
-      border-radius: 1rem !important;
-      font-family: 'Prompt', sans-serif;
+      border-radius: 1rem;
+      /* มุมโค้งมนสวย */
       padding: 1.2rem;
     }
+
 
     .question-container {
       background: #ffffff;
@@ -309,7 +310,8 @@
 <body>
   <div class="container">
     <header class="centered-header">
-      <img src="https://github.com/ittcl999/svr-frontend/blob/main/bg-logo-transport.png?raw=true" alt="โลโก้บริษัท" loading="lazy" decoding="async" width="100" height="100">
+      <img src="https://github.com/ittcl999/svr-frontend/blob/main/bg-logo-transport.png?raw=true"
+        alt="โลโก้บริษัท" loading="lazy" decoding="async" width="100" height="100">
       <h3>แบบทดสอบประเมินความเข้าใจ</h3>
       <div class="link-section">
         📘 <a href="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/view" target="_blank">
@@ -375,26 +377,14 @@
         Swal.close();
 
         if (status.tested) {
-         Swal.fire({
+          Swal.fire({
             icon: 'info',
-            title: 'ได้ทำแบบทดสอบไปแล้ว', 
-            html: `<span style="font-size: 1em; color: #ff0000;">พบว่าหมายเลขบัตรประชาชนดังกล่าว</span><br>
-                   มีการทำแบบทดสอบเรียบร้อยแล้ว<br>
-                   สามารถเข้าสอบครั้งถัดไปได้ใน<br>
-                   <span style="font-size: 1em; color: #0062ff;">วันที่ ${status.statusMessage}</span>
-                    `, 
-            confirmButtonText: 'รับทราบ' ,
-            width: 'clamp(300px, 90%, 420px)', // Responsive width
-            confirmButtonText: 'ตกลง',
-            confirmButtonColor: '#2563eb', // สีปุ่มน้ำเงินแบบ Tailwind blue-600
-            customClass: {
-            title: 'swal2-title-custom',
-            popup: 'swal2-border'
-          }
-        });
-      startButton.disabled = false;
-      startButton.style.display = "inline-block";
-
+            title: 'ได้ทำแบบทดสอบแล้ว',
+            html: `สอบครั้งถัดไป: <strong>${status.statusMessage}</strong>`,
+            confirmButtonText: 'ตกลง'
+          });
+          startButton.disabled = false;
+          startButton.style.display = "inline-block";
         } else {
           Swal.fire({ title: 'กำลังโหลดคำถาม...', didOpen: () => Swal.showLoading() });
           const qres = await fetch(`${SCRIPT_URL}?action=getQuestions`);
