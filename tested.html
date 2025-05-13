@@ -1,2 +1,101 @@
-<!-- Tested.html -->
-<!-- ...แบบทดสอบประเมิน... -->
+<!-- tested.html (แบบทดสอบประเมินความเข้าใจ) -->
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แบบทดสอบความมั่นคง</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+      color: #1e3a8a;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      text-align: left;
+    }
+    h2 {
+      text-align: center;
+      color: #1d4ed8;
+    }
+    .question {
+      margin: 1.2rem 0;
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0;
+      cursor: pointer;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      padding: 0.8rem 1.6rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: block;
+      margin: 2rem auto 0;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>📝 แบบทดสอบความเข้าใจเรื่องความมั่นคง</h2>
+
+    <div class="question">
+      <strong>1. ข้อใดถูกต้องเกี่ยวกับการรักษาความปลอดภัยทางไซเบอร์?</strong>
+      <label><input type="radio" name="q1" value="a"> การแชร์รหัสผ่านให้เพื่อนร่วมงาน</label>
+      <label><input type="radio" name="q1" value="b"> การตั้งรหัสผ่านสั้นๆ เพื่อจำง่าย</label>
+      <label><input type="radio" name="q1" value="c"> การอัปเดตระบบอย่างสม่ำเสมอ</label>
+    </div>
+
+    <div class="question">
+      <strong>2. ควรทำอย่างไรเมื่อพบอีเมลน่าสงสัย?</strong>
+      <label><input type="radio" name="q2" value="a"> เปิดทันทีเพื่อดูว่าเป็นใคร</label>
+      <label><input type="radio" name="q2" value="b"> ลบออกหรือติดต่อฝ่าย IT</label>
+      <label><input type="radio" name="q2" value="c"> ส่งต่อให้เพื่อนร่วมงานช่วยดู</label>
+    </div>
+
+    <button onclick="submitQuiz()">ส่งคำตอบ</button>
+  </div>
+
+  <script>
+    function submitQuiz() {
+      const q1 = document.querySelector('input[name="q1"]:checked');
+      const q2 = document.querySelector('input[name="q2"]:checked');
+
+      if (!q1 || !q2) {
+        Swal.fire('กรุณาตอบให้ครบทุกข้อ', '', 'warning');
+        return;
+      }
+
+      const score = (q1.value === 'c' ? 1 : 0) + (q2.value === 'b' ? 1 : 0);
+
+      if (score === 2) {
+        Swal.fire('✅ ผ่าน', 'คุณตอบถูกครบทุกข้อ', 'success').then(() => {
+          window.location.href = 'form_svr.html';
+        });
+      } else {
+        Swal.fire('❌ ไม่ผ่าน', 'กรุณาศึกษาคู่มืออีกครั้งแล้วลองใหม่', 'error');
+      }
+    }
+  </script>
+</body>
+
+</html>
