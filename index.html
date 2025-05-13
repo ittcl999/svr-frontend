@@ -144,10 +144,15 @@
     </footer>
   </div>
 
-  <script>
+<!--   <script>
     const SCRIPT_URL = "<?!= SCRIPT_URL ?>";
     function goTo(action) {
       window.open(`${SCRIPT_URL}?action=${action}`, "_blank");
+    }
+  </script> -->
+  <script>
+    function goTo(page) {
+      window.location.href = `${page}.html`;
     }
   </script>
 </body>
