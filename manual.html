@@ -1,2 +1,157 @@
-<!-- Manual.html -->
-<!-- ...คู่มือ iframe ... -->
+<!-- index.html (Home.html เวอร์ชันเต็ม) -->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบรวมกลาง - บริษัท ขนส่ง จำกัด</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; font-family: 'Prompt', sans-serif; }
+    body {
+      margin: 0; padding: 0;
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; color: #1e3a8a;
+    }
+    .container {
+      max-width: 700px; width: 100%; background: white;
+      margin: 3rem auto; padding: 2rem 2.5rem; border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); text-align: center;
+      animation: fadeIn 0.4s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    header img {
+      width: 100px; height: auto; margin-bottom: 1rem;
+      opacity: 0; animation: logoFade 0.8s forwards ease;
+    }
+    @keyframes logoFade { to { opacity: 1; } }
+    h3 { font-size: 1.4rem; font-weight: 600; color: #1d4ed8; margin: 0.3rem 0 0.6rem; }
+    p { font-size: 1rem; margin-bottom: 2rem; color: #444; }
+    .btn {
+      display: block; width: 100%; padding: 0.85rem 1.2rem;
+      margin: 0.6rem 0; border: none; border-radius: 0.75rem;
+      font-size: 1rem; font-weight: 500; text-align: center;
+      color: #fff; cursor: pointer; transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      font-family: 'Prompt', sans-serif;
+    }
+    .btn-primary { background-color: #2563eb; }
+    .btn-primary:hover { background-color: #1e40af; }
+    .btn-success { background-color: #059669; }
+    .btn-success:hover { background-color: #047857; }
+    .btn-info { background-color: #475569; }
+    .btn-info:hover { background-color: #334155; }
+    footer { text-align: center; font-size: 0.85rem; color: #666; margin-top: 2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="https://github.com/ittcl999/svr-frontend/blob/main/bg-logo-transport.png?raw=true"
+        alt="โลโก้บริษัท" loading="lazy" decoding="async">
+      <h3>ระบบขออนุญาตเข้าพื้นที่ควบคุมด้านคอมพิวเตอร์และเครือข่าย</h3>
+      <p>บริษัท ขนส่ง จำกัด</p>
+    </header>
+    <div>
+      <button onclick="goTo('manual')" class="btn btn-primary">📘 คู่มือความมั่นคงปลอดภัยเข้าพื้นที่</button>
+      <button onclick="goTo('tested')" class="btn btn-success">📝 แบบทดสอบประเมินความเข้าใจ</button>
+      <button onclick="goTo('form_svr')" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>
+    </div>
+    <footer>
+      © 2025 ระบบคอมพิวเตอร์และเครือข่าย | เทคโนโลยีสารสนเทศ
+    </footer>
+  </div>
+  <script>
+    function goTo(page) {
+      window.location.href = `${page}.html`;
+    }
+  </script>
+</body>
+</html>
+
+
+<!-- manual.html (แปลงจาก Manual.html ของ GAS) -->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>คู่มือความมั่นคง</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; font-family: 'Prompt', sans-serif; }
+    body {
+      margin: 0; padding: 0;
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; color: #1e3a8a;
+    }
+    .container {
+      max-width: 900px; width: 100%; background: white;
+      margin: 3rem auto; padding: 2rem 2.5rem; border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); text-align: center;
+      animation: fadeIn 0.4s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    header img {
+      width: 100px; height: auto; margin-bottom: 1rem;
+      opacity: 0; animation: logoFade 0.8s forwards ease;
+    }
+    @keyframes logoFade { to { opacity: 1; } }
+    h3 { font-size: 1.4rem; font-weight: 600; color: #1d4ed8; margin: 0.3rem 0 0.6rem; }
+    p { font-size: 1rem; margin-bottom: 2rem; color: #444; }
+    .guide-frame {
+      overflow: hidden; border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+      margin-bottom: 2rem;
+    }
+    .guide-frame iframe {
+      width: 100%; height: 600px; border: none;
+    }
+    .start-btn {
+      background-color: #2563eb; color: #fff;
+      font-size: 1rem; padding: 0.9rem 2rem; border: none;
+      border-radius: 10px; font-weight: 500;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+      cursor: pointer; transition: all 0.3s ease;
+    }
+    .start-btn:hover {
+      background-color: #1e40af;
+      box-shadow: 0 6px 18px rgba(30, 64, 175, 0.3);
+    }
+    @media (max-width: 600px) {
+      .container { padding: 1.5rem 1rem; }
+      .guide-frame iframe { height: 480px; }
+      h3 { font-size: 1.2rem; }
+      p { font-size: 0.95rem; }
+      .start-btn { font-size: 0.95rem; padding: 0.8rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="https://datagov.mot.go.th/uploads/group/2021-06-17-091516.344386imgd1daf68b032d6c67143d45f8686e2aea.png"
+        alt="โลโก้บริษัท" loading="lazy" decoding="async" width="100" height="100">
+      <h3>📘 คู่มือความมั่นคงปลอดภัยเข้าพื้นที่</h3>
+      <p>โปรดศึกษาคู่มือก่อนทำแบบทดสอบประเมินความเข้าใจ</p>
+    </header>
+    <div class="guide-frame">
+      <iframe src="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/preview" allow="autoplay"></iframe>
+    </div>
+    <button class="start-btn" onclick="goTo('tested')">✅ ยืนยันว่าอ่านแล้ว & เริ่มทำแบบทดสอบ</button>
+  </div>
+  <script>
+    function goTo(action) {
+      window.location.href = `${action}.html`;
+    }
+  </script>
+</body>
+</html>
