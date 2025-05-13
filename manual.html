@@ -1,4 +1,4 @@
-<!-- Manual.html -->
+<!-- Manual.html (GitHub Pages Friendly) -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -7,10 +7,7 @@
   <title>คู่มือความมั่นคง</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Prompt', sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Prompt', sans-serif; }
     body {
       margin: 0;
       padding: 0;
@@ -42,9 +39,7 @@
       margin-bottom: 1rem;
       animation: logoFade 0.8s forwards ease;
     }
-    @keyframes logoFade {
-      to { opacity: 1; }
-    }
+    @keyframes logoFade { to { opacity: 1; } }
     h3 {
       font-size: 1.4rem;
       font-weight: 600;
@@ -56,16 +51,21 @@
       margin-bottom: 2rem;
       color: #444;
     }
-    .guide-frame {
-      overflow: hidden;
-      border-radius: 14px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
-      margin-bottom: 2rem;
-    }
-    .guide-frame iframe {
-      width: 100%;
-      height: 600px;
+    .preview-btn {
+      background-color: #475569;
+      color: #fff;
+      font-size: 1rem;
+      padding: 0.8rem 1.6rem;
       border: none;
+      border-radius: 10px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(71, 85, 105, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    .preview-btn:hover {
+      background-color: #334155;
     }
     .start-btn {
       background-color: #2563eb;
@@ -81,17 +81,6 @@
     }
     .start-btn:hover {
       background-color: #1e40af;
-      box-shadow: 0 6px 18px rgba(30, 64, 175, 0.3);
-    }
-    @media (max-width: 600px) {
-      .container { padding: 1.5rem 1rem; }
-      .guide-frame iframe { height: 480px; }
-      h3 { font-size: 1.2rem; }
-      p { font-size: 0.95rem; }
-      .start-btn {
-        font-size: 0.95rem;
-        padding: 0.8rem 1.2rem;
-      }
     }
   </style>
 </head>
@@ -104,18 +93,19 @@
       <p>โปรดศึกษาคู่มือก่อนทำแบบทดสอบประเมินความเข้าใจ</p>
     </header>
 
-    <div class="guide-frame">
-      <iframe src="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/preview"
-        allow="autoplay" allowfullscreen loading="lazy"></iframe>
-    </div>
+    <!-- เปิด Google Drive Preview แยก -->
+    <button class="preview-btn" onclick="window.open('https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/view', '_blank')">
+      🔍 เปิดคู่มือความมั่นคง (Google Drive)
+    </button>
 
+    <!-- ปุ่มเริ่มทำแบบทดสอบ -->
     <button class="start-btn" onclick="goTo('tested')">
       ✅ ยืนยันว่าอ่านแล้ว & เริ่มทำแบบทดสอบ
     </button>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec"; // ใส่ URL ของคุณ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec"; // << แทนที่ด้วย URL จริงของคุณ
     function goTo(action) {
       window.location.href = `${SCRIPT_URL}?action=${action}`;
     }
