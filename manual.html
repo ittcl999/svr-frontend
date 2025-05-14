@@ -149,15 +149,9 @@
     <button class="start-btn" onclick="goTo('tested')">✅ ยืนยันว่าอ่านแล้ว & เริ่มทำแบบทดสอบ</button>
   </div>
 
-  <!-- เพิ่ม: โหลด config.js กลางเดียวสำหรับ SCRIPT_URL -->
-  <script src="assets/js/config.js"></script>
-  <!-- เพิ่ม: โหลด api.js (หากจำเป็นใน Manual ไม่ได้ใช้ API แต่เรียก goTo) -->
-  <script src="assets/js/api.js"></script>
-  <script>
-    // ลบ: กำหนด SCRIPT_URL inline ออก
-    // const SCRIPT_URL = "<?!= SCRIPT_URL ?>";
 
-    // แก้ไข: เปลี่ยน window.open เป็น window.location.href
+  <script>
+    const SCRIPT_URL = "<?!= SCRIPT_URL ?>";
     function goTo(action) {
       window.location.href = `${SCRIPT_URL}?action=${action}`;
     }
