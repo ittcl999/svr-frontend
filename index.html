@@ -151,15 +151,8 @@
     </footer>
   </div>
 
-  <!-- เพิ่ม: โหลด config.js เพื่อเก็บ SCRIPT_URL กลางเดียว -->
-  <script src="assets/js/config.js"></script>
-  <!-- เพิ่ม: โหลด api.js เชื่อม GAS Web App -->
-  <script src="assets/js/api.js"></script>
   <script>
-    // ลบ: ไม่ต้องกำหนด SCRIPT_URL ในแต่ละหน้า ย้ายไป config.js
-    // const SCRIPT_URL = 'https://script.google.com/macros/s/AKfy.../exec';
-
-    // เพิ่ม: ใช้ window.location.href แทน window.open เพื่อเปลี่ยนหน้าในแท็บเดิม
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec";  // ✅ เปลี่ยนเป็นของคุณจริง ๆ
     function goTo(action) {
       window.location.href = `${SCRIPT_URL}?action=${action}`;
     }
@@ -167,4 +160,3 @@
 </body>
 
 </html>
-
