@@ -1,1 +1,314 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>อนุมัติคำขอเข้าพื้นที่</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+      background-attachment: fixed;
+      padding: 30px;
+      margin: auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+      background-attachment: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      /* or center if ต้องการให้อยู่กลางจอแนวดิ่ง */
+    }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 800px;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      min-height: 100vh;
+      /* 🔥 ให้ความสูงพอดีกับจอ */
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #1d4ed8;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .info-row {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 16px;
+    }
+
+    .info-row span {
+      font-weight: bold;
+      display: inline-block;
+      width: 160px;
+      color: #2563eb;
+    }
+
+    .info-value a {
+      color: #1e88e5;
+      text-decoration: underline;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    #reason-box {
+      margin-top: 10px;
+      display: none;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .approval-status,
+    .status-box {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .swal2-title-custom {
+      font-size: 1.2rem !important;
+      font-weight: bold !important;
+      font-family: 'Prompt', sans-serif !important;
+      color: #1d4ed8 !important;
+    }
+
+    .swal2-border {
+      border-radius: 1rem !important;
+      padding: 1.5rem !important;
+      font-family: 'Prompt', sans-serif !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="main-container" style="display:none;">
+    <h2>แบบฟอร์มอนุมัติคำขอเข้าพื้นที่</h2>
+    <div id="details"></div>
+
+    <div id="approvalSection" style="display:none;">
+      <div class="radio-group">
+        <label><input type="radio" name="approval" value="อนุมัติ"> ✅ อนุมัติ</label>
+        <label><input type="radio" name="approval" value="ไม่อนุมัติ"> ❌ ไม่อนุมัติ</label>
+      </div>
+
+      <div id="reason-box">
+        <label class="info-label">ระบุเหตุผล (หากไม่อนุมัติ)</label>
+        <input type="text" id="reason" placeholder="กรุณาระบุเหตุผล">
+      </div>
+
+      <button onclick="submitApproval()">บันทึกผลการอนุมัติ</button>
+    </div>
+
+    <div id="approvalStatus" class="approval-status"></div>
+    <div id="statusMsg" class="status-box"></div>
+  </div>
+
+  <script>
+    const svrId = "<?= svrId ?>";
+
+    function loadData() {
+      Swal.fire({
+        title: 'กำลังประมวลผล',
+        html: 'กรุณารอสักครู่...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        width: 'clamp(300px, 90%, 420px)',
+        confirmButtonColor: '#2563eb',
+        customClass: {
+          title: 'swal2-title-custom',
+          popup: 'swal2-border'
+        }
+      });
+      google.script.run
+        .withSuccessHandler(function(data) {
+          Swal.close();
+          if (!data || !data.found) {
+            Swal.fire('❌ ไม่พบข้อมูล', 'ไม่สามารถโหลดข้อมูลได้', 'error');
+            return;
+          }
+          document.getElementById('main-container').style.display = 'block';
+          const container = document.getElementById('details');
+          container.innerHTML = `
+            <div class="info-row"><span>📄 หมายเลขคำขอ :</span> ${data.noSVR}</div>
+            <div class="info-row"><span>👤 ชื่อผู้ร้องขอ :</span> ${data.requester}</div>
+            <div class="info-row"><span>🆔 เลขบัตรประชาชน :</span> ${data.idCard}</div>
+            <div class="info-row"><span>🏢 บริษัท :</span> ${data.company}</div>
+            <div class="info-row"><span>📞 โทรศัพท์ :</span> ${data.phone}</div>
+            <div class="info-row"><span>📧 Email :</span> ${data.email}</div>
+            <div class="info-row"><span>🏗️ โครงการ :</span> ${data.project}</div>
+            <div class="info-row"><span>🎯 วัตถุประสงค์ :</span> ${data.purpose}</div>
+            <div class="info-row"><span>📅 วันที่เริ่มต้น :</span> ${data.dateStart}</div>
+            <div class="info-row"><span>📅 วันที่สิ้นสุด :</span> ${data.dateEnd}</div>
+            <div class="info-row"><span>⏰ เวลาเริ่มต้น :</span> ${data.timeIn}</div>
+            <div class="info-row"><span>⏰ เวลาสิ้นสุด :</span> ${data.timeOut}</div>
+            <div class="info-row" id="pdf1Row"><span>📄 PDF :</span> <a id="pdf1Link" href="#" target="_blank">เอกสาร (ก่อนผลการอนุมัติ)</a></div>
+            <div class="info-row" id="pdf2Row" style="display:none;"><span>📄 PDF :</span> <a id="pdf2Link" href="#" target="_blank">เอกสาร (ผลการอนุมัติ)</a></div>
+          `;
+
+          // 📌 ตอนนี้ element pdf1Link/pdf2Link มีอยู่จริงแล้ว
+          document.getElementById('pdf1Link').href = data.pdf1 || '#';
+          document.getElementById('pdf2Link').href = data.pdf2 || '#';
+
+          // 📌 จัดการการแสดง/ซ่อน
+          if (data.approveStatus === 'อนุมัติ' || data.approveStatus === 'ไม่อนุมัติ') {
+            document.getElementById('pdf1Row').style.display = 'none';
+            document.getElementById('pdf2Row').style.display = data.pdf2 ? 'block' : 'none';
+          } else {
+            document.getElementById('pdf1Row').style.display = data.pdf1 ? 'block' : 'none';
+            document.getElementById('pdf2Row').style.display = 'none';
+          }
+
+          const approvalSection = document.getElementById('approvalSection');
+          const approvalStatus = document.getElementById('approvalStatus');
+
+          if (data.approveStatus === "" || data.approveStatus === "รออนุมัติ") {
+            approvalSection.style.display = 'block';
+            approvalStatus.innerHTML = '';
+          } else {
+            approvalSection.style.display = 'none';
+            let text = '';
+            if (data.approveStatus === 'อนุมัติ') {
+              text = `✅ คำขอนี้ได้รับการอนุมัติแล้ว<br>เมื่อ ${data.approvalTimestamp || 'ไม่ระบุเวลา'}`;
+            } else if (data.approveStatus === 'ไม่อนุมัติ') {
+              text = `❌ คำขอนี้ถูกปฏิเสธ<br>เหตุผล: ${data.reasonReject || 'ไม่ระบุเหตุผล'}<br>เมื่อ ${data.approvalTimestamp || 'ไม่ระบุเวลา'}`;
+            }
+            approvalStatus.innerHTML = text;
+          }
+        })
+        .withFailureHandler(function(err) {
+          Swal.fire('❌ เกิดข้อผิดพลาด', err.message || String(err), 'error');
+        })
+        .getApproveData(svrId);
+      }
+
+    function submitApproval() {
+      const choice = document.querySelector('input[name="approval"]:checked');
+      if (!choice) {
+        Swal.fire({ icon: 'warning', title: '⚠️ กรุณาเลือกผลการอนุมัติ', confirmButtonColor: '#2563eb', customClass: { title: 'swal2-title-custom', popup: 'swal2-border' } });
+        return;
+      }
+
+      const status = choice.value;
+      const reason = document.getElementById('reason').value.trim();
+
+      if (status === "ไม่อนุมัติ" && !reason) {
+        Swal.fire({ icon: 'warning', title: '⚠️ กรุณาระบุเหตุผลหากไม่อนุมัติ', confirmButtonColor: '#2563eb', customClass: { title: 'swal2-title-custom', popup: 'swal2-border' } });
+        return;
+      }
+
+      Swal.fire({
+        title: 'กำลังบันทึกผลการอนุมัติ',
+        html: 'โปรดรอสักครู่ ระบบกำลังดำเนินการ',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        width: 'clamp(300px, 90%, 420px)',
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      });
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          Swal.close();
+          if (res.status === "success") {
+            Swal.fire({
+              icon: 'success',
+              title: '✅ บันทึกผลการอนุมัติสำเร็จ!',
+              html: '<span style="color:green">ระบบได้ดำเนินการสร้างเสร็จสมบูรณ์</span>',
+              confirmButtonColor: '#2563eb',
+              customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+            }).then(() => {
+              loadData();
+              document.getElementById('approvalSection').style.display = 'none';
+            });
+          } else {
+            Swal.fire({ icon: 'error', title: '❌ บันทึกไม่สำเร็จ', confirmButtonColor: '#2563eb', customClass: { title: 'swal2-title-custom', popup: 'swal2-border' } });
+          }
+        })
+        .withFailureHandler(function(err) {
+          Swal.close();
+          Swal.fire({ icon: 'error', title: '❌ เกิดข้อผิดพลาด', text: err.message || String(err), confirmButtonColor: '#2563eb', customClass: { title: 'swal2-title-custom', popup: 'swal2-border' } });
+        })
+        .saveApproveNew(svrId, status, reason);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      document.querySelectorAll('input[name="approval"]').forEach(el => {
+        el.addEventListener('change', () => {
+          const value = document.querySelector('input[name="approval"]:checked')?.value;
+          document.getElementById('reason-box').style.display = (value === 'ไม่อนุมัติ') ? 'block' : 'none';
+        });
+      });
+    });
+  </script>
+  <script src="js/approve.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+
+</html>
 
