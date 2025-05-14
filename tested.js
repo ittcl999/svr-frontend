@@ -1,5 +1,5 @@
 // ✅ tested.js สำหรับเชื่อม backend ด้วย fetch แทน google.script.run
-const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_ID/exec"; // 👈 เปลี่ยนเป็นของจริง
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec"; // 👈 เปลี่ยนเป็นของจริง
 let questions = [];
 
 async function startQuiz(event) {
