@@ -6,13 +6,18 @@
   <base target="_top">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แบบทดสอบความมั่นคงปลอดภัย</title>
-  <!-- คง SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- คงฟอนต์ Prompt -->
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* รักษา UI และสไตล์เดิมทั้งหมด */
+    /* body {
+      font-family: 'Prompt', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #dbeafe, #f0f9ff);
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+    } */
+
     body {
       font-family: 'Prompt', sans-serif;
       margin: 0;
@@ -23,6 +28,16 @@
       align-items: center;
       min-height: 100vh;
     }
+
+    /* .container {
+      max-width: 850px;
+      margin: 3rem 1.5rem;
+      background-color: #ffffff;
+      padding: 2.5rem 3rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    } */
+
     .container {
       max-width: 850px;
       width: 100%;
@@ -32,6 +47,209 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       margin: 2rem;
     }
+
+    .logo {
+      display: block;
+      margin: 0 auto 1rem auto;
+      width: 100px;
+      height: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1d4ed8;
+    }
+
+    h2 {
+      color: #1e3a8a;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .centered-header h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #1d4ed8;
+      margin: 0.3rem 0 0.6rem;
+    }
+
+    .centered-header p {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-weight: 500;
+      margin-top: 1rem;
+      display: block;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .question {
+      margin-bottom: 2rem;
+    }
+
+    .question p {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .choice-label {
+      display: block;
+      margin-left: 1rem;
+      margin-bottom: 0.4rem;
+      font-weight: normal;
+      color: #444;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 2rem;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    #result {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+    }
+
+    .centered-header .link-section {
+      margin-top: 0.5rem;
+    }
+
+    .centered-header .link-section a {
+      color: #444;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .centered-header .link-section a:hover {
+      text-decoration: underline;
+    }
+
+    .swal2-border {
+      border-radius: 12px !important;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .swal2-title-custom {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1e3a8a;
+      /* Tailwind blue-800 */
+    }
+
+    .swal2-border {
+      border-radius: 1rem;
+      /* มุมโค้งมนสวย */
+      padding: 1.2rem;
+    }
+
+    .question-container {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .question-header {
+      margin-bottom: 1rem;
+    }
+
+    .question-number {
+      color: #1d4ed8;
+      /* Tailwind Blue-700 */
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .choice-label {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.75rem;
+      transition: background 0.3s, border 0.3s;
+      cursor: pointer;
+    }
+
+    .choice-label:hover {
+      background: #f3f4f6;
+      border-color: #2563eb;
+    }
+
+    .choice-label input[type="radio"] {
+      margin-right: 0.75rem;
+      accent-color: #2563eb;
+    }
+
+    .choice-text {
+      font-size: 1rem;
+    }
+
+    .required-label::after {
+      content: "*";
+      margin-left: .25rem;
+      color: #dc3545;
+      /* แดงเข้มแนว Bootstrap */
+    }
+
+    header img {
+      width: 100px;
+      height: auto;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: logoFade 0.8s forwards ease;
+    }
+
+    @keyframes logoFade {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .centered-header {
+      text-align: center;
+    }
+
     .centered-header img {
       display: block;
       margin: 0 auto 1rem;
@@ -40,167 +258,139 @@
       opacity: 0;
       animation: logoFade 0.8s forwards ease;
     }
-    @keyframes logoFade { to { opacity: 1; } }
-    .centered-header h3 {
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.85rem 1.2rem;
+      margin: 0.6rem 0;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 500;
       text-align: center;
-      color: #1d4ed8;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      font-family: 'Prompt', sans-serif;
     }
-    .link-section { margin-top: 0.5rem; text-align: center; }
-    .link-section a { color: #444; font-weight: bold; text-decoration: none; }
-    .link-section a:hover { text-decoration: underline; }
-    label { font-weight: 500; margin-top: 1rem; display: block; color: #333; }
-    input[type="text"], input[type="email"], input[type="tel"] { width: 100%; padding: 0.6rem; margin-top: 0.25rem; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
-    .question-container { background: #fff; border: 1px solid #e5e7eb; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
-    .question-number { color: #1d4ed8; font-size: 1.25rem; font-weight: 700; margin: 0 0 0.25rem 0; }
-    .question-text { font-size: 1.1rem; margin: 0; }
-    .choices { display: flex; flex-direction: column; gap: 0.75rem; }
-    .choice-label { display: flex; align-items: center; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.75rem; cursor: pointer; transition: background 0.3s, border 0.3s; }
-    .choice-label:hover { background: #f3f4f6; border-color: #2563eb; }
-    .choice-label input { margin-right: 0.75rem; accent-color: #2563eb; }
-    .btn { display: block; width: 100%; padding: 0.85rem 1.2rem; margin: 0.6rem 0; border: none; border-radius: 0.75rem; font-size: 1rem; font-weight: 500; text-align: center; color: #fff; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-    .btn-info { background-color: #475569; }
-    .btn-info:hover { background-color: #334155; }
-    button[type="submit"] { background-color: #059669; color: #fff; padding: 0.8rem 1.5rem; border-radius: 8px; font-size: 1rem; font-weight: 500; cursor: pointer; width: 100%; margin-top: 1.5rem; }
-    button[type="submit"]:hover { background-color: #047857; }
-    .test-complete-message { font-size: 1.2rem; font-weight: 500; color: #dc2626; text-align: center; margin: 2rem 0; }
+
+    /* สีฟ้าเรียบหรู */
+    .btn-primary {
+      background-color: #2563eb;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e40af;
+    }
+
+    /* สีเขียวสุภาพ */
+    .btn-success {
+      background-color: #059669;
+    }
+
+    .btn-success:hover {
+      background-color: #047857;
+    }
+
+    /* สีกรมนุ่ม */
+    /* .btn-info {
+      background-color: #475569;
+    } */
+
+    .btn-info {
+      display: block;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background-color: #475569;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    /* .btn-info:hover {
+      background-color: #334155;
+    } */
+
+    .btn-info:hover {
+      background-color: #334155;
+    }
+
+    .btn:hover {
+      background-color: #1e40af;
+    }
+
+    /* .test-complete-message {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #ff0000;
+      margin-top: 2rem;
+      margin-bottom: 1.2rem;
+    } */
+
+    .test-complete-message {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #dc2626;
+      text-align: center;
+      margin-top: 2rem;
+      margin-bottom: 1.2rem;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
     <header class="centered-header">
-      <img src="https://datagov.mot.go.th/uploads/group/2021-06-17-091516.344386imgd1daf68b032d6c67143d45f8686e2aea.png" alt="โลโก้บริษัท">
+      <img src="https://datagov.mot.go.th/uploads/group/2021-06-17-091516.344386imgd1daf68b032d6c67143d45f8686e2aea.png"
+       alt="โลโก้บริษัท" width="100" height="100" loading="lazy" decoding="async">
       <h3>แบบทดสอบประเมินความเข้าใจ</h3>
+      <!-- <p>สำหรับผู้รับเหมาและบุคคลภายนอก ก่อนขออนุญาตเข้าพื้นที่</p> -->
+
       <div class="link-section">
-        📘 <a href="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/view" target="_blank">ดาวน์โหลดคู่มือความมั่นคงปลอดภัยเข้าพื้นที่</a>
+        📘 <a href="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/view" target="_blank">
+          ดาวน์โหลดคู่มือความมั่นคงปลอดภัยเข้าพื้นที่
+        </a>
       </div>
     </header>
 
     <div id="infoForm">
       <label for="idCard" class="required-label">เลขบัตรประชาชน</label>
       <input type="tel" id="idCard" placeholder="0-0000-00000-00-0" maxlength="17">
-      <label for="name" class="required-label">ชื่อ-นามสกุล</label>
+
+      <label for="name"  class="required-label">ชื่อ-นามสกุล</label>
       <input type="text" id="name" placeholder="กรอกชื่อเต็มของคุณ">
-      <label for="company" class="required-label">บริษัท</label>
+
+      <label for="company"  class="required-label">บริษัท</label>
       <input type="text" id="company" placeholder="กรอกชื่อบริษัทของคุณ">
-      <label for="phone" class="required-label">เบอร์โทรศัพท์</label>
+
+      <label for="phone"  class="required-label">เบอร์โทรศัพท์</label>
       <input type="tel" id="phone" placeholder="กรอกเบอร์โทรศัพท์">
+
       <label for="email">Email:</label>
       <input type="email" id="email" placeholder="example@email.com">
-      <button class="btn btn-primary" onclick="startQuiz(event)">เริ่มทำแบบทดสอบ</button>
+
+      <div style="text-align: center;">
+        <button onclick="startQuiz(event)">เริ่มทำแบบทดสอบ</button>
+      </div>
     </div>
 
     <form id="quizForm" style="display:none">
       <div id="questions"></div>
-      <button type="submit">ส่งคำตอบ</button>
+      <div style="text-align: center;">
+        <button type="submit">ส่งคำตอบ</button>
+      </div>
     </form>
+
     <div id="result"></div>
   </div>
+<script src="js/tested.js"></script>
 
-  <!-- เพิ่มโหลด config และ api -->
-  <script src="assets/js/config.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script>
-    let questions = [];
-
-    // ฟังก์ชันเริ่ม Quiz เชื่อม API โดยคง SweetAlert เดิม
-    async function startQuiz(event) {
-      event.preventDefault();
-      const btn = event.target;
-      btn.disabled = true;
-      btn.style.display = 'none';
-
-      const idCardRaw = document.getElementById('idCard').value.trim();
-      const idCard = idCardRaw.replace(/\D/g, '');
-      const name = document.getElementById('name').value.trim();
-      const company = document.getElementById('company').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const email = document.getElementById('email').value.trim();
-
-      if (!idCard) {
-        Swal.fire({ icon:'warning', title:'กรุณากรอก "เลขบัตรประชาชน"', html:'<span style="color:red">จำเป็นต้องกรอกเลขบัตรประชาชน 13 หลัก</span><br>ก่อนเริ่มทำแบบทดสอบ', width:'clamp(300px,90%,420px)', confirmButtonText:'ตกลง', confirmButtonColor:'#2563eb', customClass:{ title:'swal2-title-custom',popup:'swal2-border'} });
-        btn.disabled = false; btn.style.display = 'inline-block'; return;
-      }
-      if (idCard.length !== 13) {
-        Swal.fire({ icon:'warning', title:'เลขบัตรประชาชนไม่ครบ', html:'<span style="color:red">ตรวจสอบว่าใส่เลขครบ 13 หลัก</span><br>ก่อนเริ่มทำแบบทดสอบ', width:'clamp(300px,90%,420px)', confirmButtonText:'ตกลง', confirmButtonColor:'#2563eb', customClass:{ title:'swal2-title-custom',popup:'swal2-border'} });
-        btn.disabled = false; btn.style.display = 'inline-block'; return;
-      }
-      if (!name) {
-        Swal.fire({ icon:'warning', title:'กรุณากรอก "ชื่อ-นามสกุล"', html:'<span style="color:red">จำเป็นต้องกรอกชื่อ-นามสกุล</span><br>ก่อนเริ่มทำแบบทดสอบ', width:'clamp(300px,90%,420px)', confirmButtonText:'ตกลง', confirmButtonColor:'#2563eb', customClass:{ title:'swal2-title-custom',popup:'swal2-border'} });
-        btn.disabled = false; btn.style.display = 'inline-block'; return;
-      }
-      if (!company) {
-        Swal.fire({ icon:'warning', title:'กรุณากรอก "บริษัท"', html:'<span style="color:red">จำเป็นต้องกรอกชื่อ บริษัท/หน่วยงาน\nต้นสังกัดของท่าน</span><br>ก่อนเริ่มทำแบบทดสอบ', width:'clamp(300px,90%,420px)', confirmButtonText:'ตกลง', confirmButtonColor:'#2563eb', customClass:{ title:'swal2-title-custom',popup:'swal2-border'} });
-        btn.disabled = false; btn.style.display = 'inline-block'; return;
-      }
-      if (!phone) {
-        Swal.fire({ icon:'warning', title:'กรุณากรอก "เบอร์โทรศัพท์"', html:'<span style="color:red">จำเป็นต้องกรอกเบอร์โทรศัพท์ติดต่อได้</span><br>ก่อนเริ่มทำแบบทดสอบ', width:'clamp(300px,90%,420px)', confirmButtonText:'ตกลง', confirmButtonColor:'#2563eb', customClass:{ title:'swal2-title-custom',popup:'swal2-border'} });
-        btn.disabled = false; btn.style.display = 'inline-block'; return;
-      }
-
-      Swal.fire({ title:'กำลังตรวจสอบข้อมูล...', allowOutsideClick:false, didOpen:()=>Swal.showLoading(), width:'clamp(300px,90%,420px)', customClass:{ popup:'swal2-border', title:'swal2-title-custom'} });
-      let status;
-      try { status = await checkTestStatus(idCard); } catch { Swal.close(); Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถตรวจสอบข้อมูลได้', confirmButtonColor:'#2563eb'}); btn.disabled=false; btn.style.display='inline-block'; return; }
-      Swal.close();
-      if (status.tested) {
-        Swal.fire({ icon:'info', title:'ได้ทำแบบทดสอบไปแล้ว', html:`<span style="color:#ff0000;">พบว่าหมายเลขบัตรประชาชนดังกล่าว</span><br>มีการทำแบบทดสอบเรียบร้อยแล้ว<br>ครั้งถัดไป: <strong>${status.statusMessage}</strong>`, width:'clamp(300px,90%,420px)', confirmButtonText:'ตกลง', confirmButtonColor:'#2563eb', customClass:{ title:'swal2-title-custom', popup:'swal2-border'} });
-        btn.disabled=false; btn.style.display='inline-block'; return;
-      }
-
-      Swal.fire({ title:'กำลังเข้าสู่แบบทดสอบ...', allowOutsideClick:false, didOpen:()=>Swal.showLoading(), width:'clamp(300px,90%,420px)' });
-      try { questions = await getQuestions(idCard); } catch { Swal.close(); Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถดึงคำถามได้', confirmButtonColor:'#2563eb'}); btn.disabled=false; btn.style.display='inline-block'; return; }
-      Swal.close();
-      document.getElementById('infoForm').style.display='none';
-      document.getElementById('quizForm').style.display='block';
-      renderQuestions();
-    }
-
-    // แก้ไข listener ให้เรียก API submitAnswers แทน google.script.run
-    document.getElementById('quizForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const submitBtn = e.target.querySelector("button[type='submit']");
-      submitBtn.disabled = true;
-      submitBtn.style.display = 'none';
-      const answers = questions.map((q,i) => {
-        const sel = document.querySelector(`input[name='q${i}']:checked`);
-        return sel? parseInt(sel.value): -1;
-      });
-      const unanswered = answers.indexOf(-1);
-      if (unanswered !== -1) {
-        Swal.fire({ icon:'warning', title:'ยังตอบไม่ครบทุกข้อ', text:`กรุณาตอบคำถามให้ครบก่อนส่งคำตอบ (เช่น ข้อที่ ${unanswered+1})`, width:'clamp(300px,90%,420px)', confirmButtonColor:'#2563eb', customClass:{ title:'swal2-title-custom', popup:'swal2-border'} });
-        submitBtn.disabled=false; submitBtn.style.display='inline-block'; return;
-      }
-      Swal.fire({ title:'กำลังประมวลผลคำตอบของคุณ', allowOutsideClick:false, didOpen:()=>Swal.showLoading(), width:'clamp(300px,90%,420px)', customClass:{ title:'swal2-title-custom', popup:'swal2-border'} });
-      const payload = { idCard: document.getElementById('idCard').value.replace(/\D/g,''), name: document.getElementById('name').value.trim(), company: document.getElementById('company').value.trim(), phone: document.getElementById('phone').value.trim(), email: document.getElementById('email').value.trim(), answers };
-      try { await submitAnswers(payload); } catch { Swal.close(); Swal.fire({ icon:'error', title:'เกิดข้อผิดพลาด', text:'ไม่สามารถส่งคำตอบได้', confirmButtonColor:'#2563eb'}); submitBtn.disabled=false; submitBtn.style.display='inline-block'; return; }
-      Swal.close();
-      document.getElementById('quizForm').style.display='none';
-      document.getElementById('result').innerHTML = `<h4 class='test-complete-message'>คุณ ${payload.name} ได้ทำแบบทดสอบเรียบร้อยแล้ว</h4><button onclick="goTo('form_svr')" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>`;
-    });
-
-    function renderQuestions() {
-      const ctr = document.getElementById('questions');
-      ctr.innerHTML = '';
-      questions.forEach((q,i) => {
-        const div = document.createElement('div'); div.className='question-container';
-        div.innerHTML = `<div><h2 class='question-number'>ข้อที่ ${i+1}</h2><p class='question-text'>${q.question}</p></div><div class='choices'>${q.choices.map((c,j) => `<label class='choice-label'><input type='radio' name='q${i}' value='${j}'><span class='choice-text'>${c}</span></label>`).join('')}</div>`;
-        ctr.appendChild(div);
-      });
-    }
-
-    // ฟังก์ชันจัดรูป ID
-    function formatThaiID(id) {
-      const v = id.replace(/\D/g, '').slice(0,13);
-      const parts = [v.slice(0,1), v.slice(1,5), v.slice(5,10), v.slice(10,12), v.slice(12,13)];
-      return parts.filter(Boolean).join('-');
-    }
-    document.getElementById('idCard').addEventListener('input', function(){ this.value = formatThaiID(this.value); });
-
-    // ฟังก์ชัน navigate
-    function goTo(action) { window.location.href = `${SCRIPT_URL}?action=${action}`; }
-  </script>
 </body>
 
 </html>
