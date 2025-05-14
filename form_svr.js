@@ -133,7 +133,36 @@ function resizeCanvas() {
   canvas.height = 150;
 }
 
-// ✅ ในหน้าหลักควรเรียก resizeCanvas() เมื่อโหลด Step 5
-window.addEventListener("load", () => {
+function showTab(n) {
+  const tabs = document.getElementsByClassName('tab');
+  Array.from(tabs).forEach(t => t.classList.remove('active'));
+  tabs[n].classList.add('active');
+  document.getElementById('prevBtn').style.display = (n === 0 ? 'none' : 'inline');
+  document.getElementById('nextBtn').innerText = (n === tabs.length - 1 ? 'ส่งคำร้อง' : 'ถัดไป');
+  if (n === 4) resizeCanvas();
+  const ind = document.querySelector('.step-indicator');
+  ind.innerHTML = '';
+  for (let i = 0; i < tabs.length; i++) {
+    const dot = document.createElement('span');
+    if (i === n) dot.classList.add('active');
+    ind.appendChild(dot);
+  }
+}
+
+function nextPrev(n) {
+  const tabs = document.getElementsByClassName('tab');
+  if (n === 1 && !validateForm()) return;
+  tabs[currentTab].classList.remove('active');
+  currentTab += n;
+  if (currentTab >= tabs.length) {
+    submitForm();
+    return;
+  }
+  showTab(currentTab);
+}
+
+let currentTab = 0;
+document.addEventListener("DOMContentLoaded", () => {
+  showTab(currentTab);
   resizeCanvas();
 });
