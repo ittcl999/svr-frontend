@@ -1,40 +1,139 @@
-// form_svr.js (โครงสร้างเบื้องต้น จะจัดตาม logic ปัจจุบัน)
+// form_svr.js (Full logic แยกจาก HTML)
 
-// 👉 ตรงนี้ใช้แทน google.script.run
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec';
+
+// 🔁 POST to GAS
 async function postToGAS(payload) {
-  try {
-    const res = await fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { "Content-Type": "application/json" }
-    });
-    return await res.json();
-  } catch (err) {
-    throw new Error("การเชื่อมต่อกับระบบล้มเหลว");
-  }
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" }
+  });
+  return res.json();
 }
 
-// ✅ ใช้แทน google.script.run.findWorkerFromCID
+// 🔍 Fetch worker by CID
 async function fetchWorkerByCID(cid) {
-  try {
-    const url = `${SCRIPT_URL}?action=checkWorkerFromCID&cid=${cid}`;
-    const res = await fetch(url);
-    return await res.json();
-  } catch (err) {
-    return null;
-  }
+  const res = await fetch(`${SCRIPT_URL}?action=checkWorkerFromCID&cid=${cid}`);
+  return res.json();
 }
 
-// 🔁 ต่อไปจะย้ายฟังก์ชัน: 
-// - formatIDCard
-// - checkWorkerFromCID
-// - addPersonnelField / updatePersonnelLabels
-// - submitForm
-// - validateForm
-// - clearSignature / resizeCanvas
-// - nextPrev / showTab
+function formatIDCard(el) {
+  let v = el.value.replace(/\D/g, '').slice(0, 13);
+  el.dataset.raw = v;
+  el.value = v.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, '$1-$2-$3-$4-$5');
+}
 
-// 📌 เมื่อย้ายเสร็จ จะสามารถลิงก์จาก form_svr.html ได้แบบ:
-// <script src="js/form_svr.js"></script>
+function addPersonnelField() {
+  const container = document.getElementById('personnel-list');
+  const row = document.createElement('div');
+  row.className = 'person-row';
 
-// ✅ โปรดรอติดตามส่วนที่ 2: ฟังก์ชันเต็ม
+  const group = document.createElement('div');
+  group.className = 'id-input-group';
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.required = true;
+  input.maxLength = 17;
+  input.dataset.raw = '';
+  input.placeholder = '';
+  input.oninput = async function () {
+    formatIDCard(this);
+    const cid = this.dataset.raw;
+    const row = this.closest('.person-row');
+    const det = row.querySelector('.worker-details');
+    if (cid.length === 13) {
+      document.getElementById('checking').style.display = 'block';
+      const res = await fetchWorkerByCID(cid);
+      document.getElementById('checking').style.display = 'none';
+      det.innerHTML = '';
+
+      if (res?.fullName) {
+        [['fullName', 'ชื่อ-นามสกุล'], ['company', 'บริษัท'], ['phone', 'เบอร์โทร'], ['email', 'Email']]
+          .forEach(([key, labelText]) => {
+            if (!res[key]) return;
+            const div = document.createElement('div');
+            div.className = 'input-field';
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.readOnly = true;
+            input.value = res[key];
+            const label = document.createElement('label');
+            label.className = 'active';
+            label.textContent = labelText;
+            div.append(input, label);
+            det.append(div);
+          });
+        this.dataset.name = res.fullName;
+        this.dataset.company = res.company;
+        this.dataset.phone = res.phone;
+        this.dataset.email = res.email;
+      } else {
+        const div = document.createElement('div');
+        div.className = 'input-field';
+        const status = document.createElement('span');
+        status.style.color = 'red';
+        status.style.fontWeight = 'bold';
+        status.textContent = '❌ ไม่พบข้อมูล';
+        div.append(status);
+        det.append(div);
+      }
+    } else {
+      this.dataset.name = '';
+      this.dataset.company = '';
+      this.dataset.phone = '';
+      this.dataset.email = '';
+      det.innerHTML = '';
+    }
+  };
+
+  const label = document.createElement('label');
+  label.className = 'active person-label';
+  label.textContent = '';
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'remove-btn';
+  removeBtn.textContent = '✕';
+  removeBtn.onclick = () => {
+    container.removeChild(row);
+    updatePersonnelLabels();
+  };
+
+  group.append(input, label, removeBtn);
+  row.append(group);
+
+  const details = document.createElement('div');
+  details.className = 'worker-details';
+  row.append(details);
+
+  container.append(row);
+  updatePersonnelLabels();
+}
+
+function updatePersonnelLabels() {
+  const rows = document.querySelectorAll('#personnel-list .person-row');
+  rows.forEach((row, index) => {
+    const label = row.querySelector('.person-label');
+    const input = row.querySelector('input[type="text"]');
+    label.textContent = `#${index + 1}`;
+    input.placeholder = `เลขบัตรประชาชน #${index + 1}`;
+  });
+}
+
+function clearSignature() {
+  const canvas = document.getElementById('signature-pad');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function resizeCanvas() {
+  const canvas = document.getElementById('signature-pad');
+  canvas.width = canvas.clientWidth;
+  canvas.height = 150;
+}
+
+// ✅ ในหน้าหลักควรเรียก resizeCanvas() เมื่อโหลด Step 5
+window.addEventListener("load", () => {
+  resizeCanvas();
+});
