@@ -308,7 +308,7 @@
   <script>
     const SCRIPT_URL = "<?!= SCRIPT_URL ?>";
     function goTo(action) {
-      window.location.href = 'manual.html'
+      window.location.href = `${SCRIPT_URL}?action=${action}`;
     }
   </script>
 
