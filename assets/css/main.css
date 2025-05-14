@@ -1,0 +1,16 @@
+/* เพิ่ม: กำหนด font และ background ตามสไตล์เดิม */
+body {
+  /* แก้ไข: ไล่เฉดฟ้า–ขาว */
+  background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+  /* เพิ่ม: ใช้ฟอนต์ Prompt */
+  font-family: 'Prompt', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* เพิ่ม: container กลางหน้า */
+.container {
+  max-width: 960px;
+  margin: auto;
+  padding: 2rem;
+}
