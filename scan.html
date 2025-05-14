@@ -1,1 +1,248 @@
+หากคุณพร้อม ➜ ไปหน้า scan.html ต่อได้เลยครับ ✅Logic/UI ให้คงเดิม สมบูรณ์ 1 ต่อ 1
+
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>สแกน QR Code Check-In / Check-Out</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(to bottom right, #eff6ff, #dbeafe);
+      margin: 0;
+      padding: 40px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-size: clamp(14px, 1.1vw, 18px);
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      color: #2563eb;
+      text-align: center;
+      font-size: clamp(20px, 2.2vw, 28px);
+    }
+
+    #reader {
+      width: 100%;
+      margin: 20px 0;
+      border-radius: 12px;
+      background: #f9fafb;
+      padding: 10px;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+
+    .info {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #eee;
+      padding: 8px 0;
+    }
+
+    .info-row span {
+      flex: 0 0 auto;
+      min-width: 130px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .info-row div {
+      flex: 1 1 0;
+      word-break: break-word;
+    }
+
+    #buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      background-color: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      min-width: 120px;
+      transition: background 0.3s;
+      font-size: clamp(14px, 1.1vw, 18px);
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    
+
+    /* SweetAlert2 styles */
+    .swal2-border {
+      border-radius: 1rem !important;
+      padding: 1.2rem !important;
+      font-family: 'Prompt', sans-serif;
+    }
+
+    .swal2-title-custom {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1e3a8a !important;
+    }
+
+    @media (max-width: 480px) {
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .info-row span {
+        width: 100%;
+        margin-bottom: 4px;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      #buttons {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #reader {
+        width: 100% !important;
+      }
+    }
+
+    .info-row {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.98rem;
+    }
+
+    .info-label {
+      font-weight: bold;
+      color: #2563eb;
+      margin-bottom: 2px;
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .info-value {
+      color: #333;
+      word-break: break-word;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .btn-checkin {
+      background-color: #22c55e;
+      /* เขียว */
+    }
+
+    .btn-checkin:hover {
+      background-color: #16a34a;
+    }
+
+    .btn-checkout {
+      background-color: #f97316;
+      /* ส้ม */
+    }
+
+    .btn-checkout:hover {
+      background-color: #ea580c;
+    }
+
+    .locked-wrapper {
+      margin-top: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* .locked {
+      color: #dc2626;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
+    } */
+
+    .locked {
+      color: #dc2626;
+      /* สีเขียวมะนาวอ่อน */
+      font-weight: bold;
+      font-size: 1.05rem;
+      margin: 0 auto;
+    }
+
+    .scan-again-btn {
+      padding: 10px 20px;
+      background-color: #0ea5e9;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.3s;
+    }
+
+    .scan-again-btn:hover {
+      background-color: #0369a1;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Scan QR Code</h2>
+    <div id="reader"></div>
+    <div id="info" class="info" style="display:none;"></div>
+    <div id="buttons" style="display:none; flex-direction: column; gap: 12px; align-items:center;">
+      <button id="checkin" class="btn-checkin" onclick="submitScanAction('in')">✅ Check-In</button>
+      <button id="checkout" class="btn-checkout" onclick="submitScanAction('out')">✅ Check-Out</button>
+      <button onclick="resetScanner()" class="scan-again-btn">🔄 Scan QR Code (New)</button>
+    </div>
+  </div>
+
+  <script src="js/scan.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  
+</body>
+
+</html>
 
