@@ -156,11 +156,55 @@ function clearSignature() {
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function resizeCanvas() {
-  const canvas = document.getElementById('signature-pad');
-  canvas.width = canvas.clientWidth;
-  canvas.height = 150;
-}
+
+  // ✅ รองรับลายเซ็น
+window.addEventListener("load", () => {
+  const canvas = document.getElementById("signature-pad");
+  const ctx = canvas.getContext("2d");
+
+
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  canvas.style.touchAction = 'none'; // ป้องกัน scroll
+
+  let drawing = false, lastX = 0, lastY = 0;
+
+  function start(e) {
+    drawing = true;
+    const pt = e.touches ? e.touches[0] : e;
+    const rect = canvas.getBoundingClientRect();
+    lastX = pt.clientX - rect.left;
+    lastY = pt.clientY - rect.top;
+    e.preventDefault();
+  }
+
+  function move(e) {
+    if (!drawing) return;
+    const pt = e.touches ? e.touches[0] : e;
+    const rect = canvas.getBoundingClientRect();
+    const x = pt.clientX - rect.left;
+    const y = pt.clientY - rect.top;
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    lastX = x; lastY = y;
+    e.preventDefault();
+  }
+
+  canvas.addEventListener("mousedown", start);
+  canvas.addEventListener("touchstart", start);
+  canvas.addEventListener("mousemove", move);
+  canvas.addEventListener("touchmove", move);
+  canvas.addEventListener("mouseup",   () => drawing = false);
+  canvas.addEventListener("touchend", () => drawing = false);
+  canvas.addEventListener("mouseout", () => drawing = false);
+});
+
+
 
 let currentTab = 0;
 
@@ -355,6 +399,37 @@ function validateForm() {
 
   return true;
 }
+
+function showTermsPopup() {
+  Swal.fire({
+    icon: 'info',
+    title: '🔐 เงื่อนไขและข้อตกลงก่อนส่งคำร้อง',
+    html: `
+      <div style="text-align: left; font-size: 1rem; color: #374151; line-height: 1.6;">
+        เพื่อความมั่นคงปลอดภัยของระบบสารสนเทศและพื้นที่ควบคุม<br>
+        บริษัท ขนส่ง จำกัด ขอให้ผู้ยื่นคำร้องทุกท่าน โปรดพิจารณาข้อกำหนดต่อไปนี้อย่างรอบคอบ :<br><br>
+
+        ✅ <strong>ยืนยันว่าได้ศึกษาและเข้าใจ</strong> แนวทางปฏิบัติตาม<br>
+        <a href="https://drive.google.com/file/d/1Z5cbRfR9T9CL9t024MkmxzyLrROAvn9y/view" target="_blank"
+          style="color: #2563eb; font-weight: bold; text-decoration: none;">
+          📘 คู่มือความมั่นคงปลอดภัยสำหรับผู้รับเหมาและบุคคลภายนอก</a><br><br>
+
+        🛑 <strong>ข้อมูลที่กรอกแบบฟอร์มนั้น</strong> จะถูกใช้เพื่อประกอบการพิจารณาอนุญาตเข้าห้อง Server Room<br>
+        🚫 <span style="color:red;"><strong>การแจ้งข้อมูลอันเป็นเท็จหรือปลอมแปลงเอกสาร</strong> อาจมีความผิดตามกฎหมาย</span><br><br>
+
+        การส่งแบบฟอร์มนี้ถือเป็นการ <strong>ยอมรับและตกลงตามเงื่อนไขข้างต้นโดยสมบูรณ์</strong>
+      </div>
+    `,
+    confirmButtonText: 'รับทราบ',
+    width: 'clamp(320px, 95%, 500px)',
+    confirmButtonColor: '#2563eb',
+    customClass: {
+      title: 'swal2-title-custom',
+      popup: 'swal2-border'
+    }
+  });
+}
+
 
 
 async function submitForm() {
