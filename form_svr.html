@@ -244,20 +244,20 @@
           <label  class="active" for="input7">วัตถุประสงค์<span style="color:#dc3545">*</span></label>
         </div>
         <div class="input-field">
-          <input id="input8" name="input8" type="date" class="datepicker" required>
-          <label  class="active" class="active" for="input8">วันที่เริ่มต้น<span style="color:#dc3545">*</span></label>
+          <input id="input8" name="input8" type="text" class="datepicker" required>
+          <label  class="active" for="input8">วันที่เริ่มต้น<span style="color:#dc3545">*</span></label>
         </div>
         <div class="input-field">
-          <input id="input9" name="input9" type="date" class="datepicker" required>
-          <label  class="active" class="active" for="input9">วันที่สิ้นสุด<span style="color:#dc3545">*</span></label>
+          <input id="input9" name="input9" type="text" class="datepicker" required>
+          <label  class="active" for="input9">วันที่สิ้นสุด<span style="color:#dc3545">*</span></label>
         </div>
         <div class="input-field">
           <input id="Time_in" name="Time_in" type="time" required>
-          <label  class="active" class="active" for="Time_in">เวลาเริ่มต้น<span style="color:#dc3545">*</span></label>
+          <label  class="active" for="Time_in">เวลาเริ่มต้น<span style="color:#dc3545">*</span></label>
         </div>
         <div class="input-field">
           <input id="Time_out" name="Time_out" type="time" required>
-          <label  class="active" class="active" for="Time_out">เวลาสิ้นสุด<span style="color:#dc3545">*</span></label>
+          <label  class="active" for="Time_out">เวลาสิ้นสุด<span style="color:#dc3545">*</span></label>
         </div>
         <label><input type="checkbox" id="input10_1" name="input10_1"><span>ห้อง MIS</span></label><br>
         <label><input type="checkbox" id="input10_2" name="input10_2"><span>ห้อง E-Ticket</span></label>
@@ -324,9 +324,33 @@
     </form>
   </div>
 
-  
-  <script src="form_svr.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const elems = document.querySelectorAll('.datepicker');
+    M.Datepicker.init(elems, {
+      format: 'yyyy-mm-dd',
+      i18n: {
+        cancel: 'ยกเลิก',
+        clear: 'ล้าง',
+        done: 'ตกลง',
+        months: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+        monthsShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+        weekdays: ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์'],
+        weekdaysShort: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+        weekdaysAbbrev: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
+      },
+      autoClose: true
+    });
+  });
+</script>
+
+
+  <!-- Materialize JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="form_svr.js"></script>
 
 
 </body>
