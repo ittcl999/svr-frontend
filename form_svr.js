@@ -213,7 +213,23 @@ function validateForm() {
         return false;
       }
     }
-  }
+
+    if (inp.id === 'input5') {
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(val)) {
+            Swal.fire({
+              icon: 'warning',
+              title: '❌ รูปแบบ Email ไม่ถูกต้อง',
+              html: `<span style="color:red">โปรดกรอก Email ให้ถูกต้อง เช่น user@example.com</span>`,
+              width: 'clamp(300px, 90%, 420px)',
+              confirmButtonColor: '#2563eb',
+              customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+            });
+            return false;
+          }
+        }
+      }
+  
 
   // ✅ Step 2: เวลาและวันที่
   if (currentTab === 1) {
