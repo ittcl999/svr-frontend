@@ -16,18 +16,35 @@ async function postToGAS(payload) {
 function fetchWorkerByCID(cid) {
   return new Promise((resolve, reject) => {
     const callbackName = `jsonpCallback_${Date.now()}`;
+    const script = document.createElement('script');
+    
     window[callbackName] = function (res) {
+      clearTimeout(timeout); // ✅ ยกเลิก timeout ถ้ามาก่อน
       resolve(res);
       delete window[callbackName];
       document.body.removeChild(script);
     };
 
-    const script = document.createElement('script');
     script.src = `${SCRIPT_URL}?action=checkWorkerFromCID&cid=${cid}&callback=${callbackName}`;
-    script.onerror = () => reject(new Error("โหลดข้อมูลไม่สำเร็จ"));
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      document.body.removeChild(script);
+      reject(new Error("โหลดข้อมูลไม่สำเร็จ"));
+    };
+
     document.body.appendChild(script);
+
+    // ✅ ตั้ง timeout กันโหลดนานเกิน
+    const timeout = setTimeout(() => {
+      delete window[callbackName];
+      document.body.removeChild(script);
+      reject(new Error("หมดเวลารอข้อมูลจากระบบ"));
+    }, 5000);
   });
 }
+
+
 
 
 function formatIDCard(el) {
