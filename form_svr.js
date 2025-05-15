@@ -151,58 +151,62 @@ function updatePersonnelLabels() {
   });
 }
 
-function clearSignature() {
-  const canvas = document.getElementById('signature-pad');
-  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-}
+function clearSignature(){
+      const c=document.getElementById('signature-pad');
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+    }
+    function resizeCanvas(){
+      const c=document.getElementById('signature-pad');
+      c.width=c.clientWidth; c.height=150;
+    }
+    window.addEventListener("load", () => {
+      const canvas = document.getElementById("signature-pad");
+      const ctx = canvas.getContext("2d");
 
+      function resizeCanvas() {
+        // ปรับ canvas.width/height ให้ตรงกับขนาดที่ CSS กำหนด
+        canvas.width  = canvas.clientWidth;
+        canvas.height = 150;
+      }
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
 
-  // ✅ รองรับลายเซ็น
-window.addEventListener("load", () => {
-  const canvas = document.getElementById("signature-pad");
-  const ctx = canvas.getContext("2d");
+      // ปิดการเลื่อนหน้าเมื่อปัดบน canvas
+      canvas.style.touchAction = 'none';
 
+      let drawing = false, lastX = 0, lastY = 0;
+      function start(e) {
+        drawing = true;
+        const pt = e.touches ? e.touches[0] : e;
+        const rect = canvas.getBoundingClientRect();
+        lastX = pt.clientX - rect.left;
+        lastY = pt.clientY - rect.top;
+        e.preventDefault();
+      }
+      function move(e) {
+        if (!drawing) return;
+        const pt = e.touches ? e.touches[0] : e;
+        const rect = canvas.getBoundingClientRect();
+        const x = pt.clientX - rect.left;
+        const y = pt.clientY - rect.top;
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        lastX = x; lastY = y;
+        e.preventDefault();
+      }
 
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-
-  canvas.style.touchAction = 'none'; // ป้องกัน scroll
-
-  let drawing = false, lastX = 0, lastY = 0;
-
-  function start(e) {
-    drawing = true;
-    const pt = e.touches ? e.touches[0] : e;
-    const rect = canvas.getBoundingClientRect();
-    lastX = pt.clientX - rect.left;
-    lastY = pt.clientY - rect.top;
-    e.preventDefault();
-  }
-
-  function move(e) {
-    if (!drawing) return;
-    const pt = e.touches ? e.touches[0] : e;
-    const rect = canvas.getBoundingClientRect();
-    const x = pt.clientX - rect.left;
-    const y = pt.clientY - rect.top;
-    ctx.strokeStyle = "blue";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    lastX = x; lastY = y;
-    e.preventDefault();
-  }
-
-  canvas.addEventListener("mousedown", start);
-  canvas.addEventListener("touchstart", start);
-  canvas.addEventListener("mousemove", move);
-  canvas.addEventListener("touchmove", move);
-  canvas.addEventListener("mouseup",   () => drawing = false);
-  canvas.addEventListener("touchend", () => drawing = false);
-  canvas.addEventListener("mouseout", () => drawing = false);
-});
+      canvas.addEventListener("mousedown", start);
+      canvas.addEventListener("touchstart", start);
+      canvas.addEventListener("mousemove", move);
+      canvas.addEventListener("touchmove", move);
+      canvas.addEventListener("mouseup",   () => drawing = false);
+      canvas.addEventListener("touchend", () => drawing = false);
+      canvas.addEventListener("mouseout", () => drawing = false);
+    });
 
 
 
@@ -336,34 +340,51 @@ function validateForm() {
 
   // ✅ Step 3: ตรวจผู้ร่วมงาน
   if (currentTab === 2) {
-    const people = document.querySelectorAll('.person-row');
-    if (people.length === 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: '⚠️ กรุณาเพิ่มผู้ร่วมเข้างาน',
-        html: `<span style="color:red">ต้องมีผู้ร่วมงานอย่างน้อย 1 คน</span>`,
-        confirmButtonColor: '#2563eb',
-        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
-      });
-      return false;
-    }
+        const people = document.querySelectorAll('#personnel-list .person-row');
+        if (people.length === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: '⚠️ กรุณาเพิ่มผู้ร่วมเข้างานอย่างน้อย 1 คน',
+            html: `<span style="color:red">ต้องมีรายชื่อผู้ร่วมเข้างาน</span><br>ก่อนดำเนินการต่อ`,
+            width: 'clamp(300px, 90%, 420px)',
+            confirmButtonColor: '#2563eb',
+            customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+          });
+          return false;
+        }
 
-    for (let i = 0; i < people.length; i++) {
-      const inp = people[i].querySelector('input[type="text"]');
-      const cid = inp.dataset.raw || '';
-      const name = inp.dataset.name || '';
-      if (cid.length !== 13 || !name) {
-        Swal.fire({
-          icon: 'warning',
-          title: `❌ ไม่พบข้อมูลผู้ร่วมงานลำดับ #${i + 1} `,
-          html: `<span style="color:red">ไม่สามารถดำเนินการต่อได้<br>เนื่องจากผู้ร่วมเข้างานลำดับ #${num} ไม่มีข้อมูลในระบบ</span><br>ให้ทำการแบบทดสอบประเมินความเข้าใจ<br><a href="${SCRIPT_URL}?action=tested" target="_blank">คลิกเพื่อเข้าสู่แบบทดสอบ</a>`,
-          confirmButtonColor: '#2563eb',
-          customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
-        });
-        return false;
+        for (let i = 0; i < people.length; i++) {
+          const row = people[i];
+          const inp = row.querySelector('input[type=text]');
+          const cid = inp?.dataset.raw || '';
+          const name = inp?.dataset.name || '';
+          const num = i + 1;
+
+          if (cid.length !== 13) {
+            Swal.fire({
+              icon: 'warning',
+              title: `❌ กรอกเลขบัตรประชาชนไม่ครบ`,
+              html: `<span style="color:red">ช่องเลขบัตรประชาชนลำดับที่ #${num}<br>กรุณากรอกให้ครบ 13 หลัก</span>`,
+              width: 'clamp(300px, 90%, 420px)',
+              confirmButtonColor: '#2563eb',
+              customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+            });
+            return false;
+          }
+
+          if (!name) {
+            Swal.fire({
+              icon: 'error',
+              title: `❌ ไม่พบข้อมูลผู้ร่วมเข้างาน`,
+              html: `<span style="color:red">ไม่สามารถดำเนินการต่อได้<br>เนื่องจากผู้ร่วมเข้างานลำดับ #${num} ไม่มีข้อมูลในระบบ</span><br>ให้ทำการแบบทดสอบประเมินความเข้าใจ<br><a href="${SCRIPT_URL}?action=tested" target="_blank">คลิกเพื่อเข้าสู่แบบทดสอบ</a>`,
+              width: 'clamp(300px, 90%, 420px)',
+              confirmButtonColor: '#2563eb',
+              customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+            });
+            return false;
+          }
+        }
       }
-    }
-  }
 
   // ✅ Step 4: ต้องแนบหนังสือนำ
   if (currentTab === 3) {
@@ -381,21 +402,44 @@ function validateForm() {
 
   // ✅ Step 5: ตรวจลายเซ็น
   if (currentTab === 4) {
-    const canvas = document.getElementById('signature-pad');
-    const ctx = canvas.getContext('2d');
-    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    const hasDrawing = Array.from(pixels).some((v, i) => i % 4 === 3 && v !== 0);
-    if (!hasDrawing) {
-      Swal.fire({
-        icon: 'warning',
-        title: '⚠️ กรุณาลงลายเซ็น',
-        html: `<span style="color:red">โปรดเซ็นชื่อในช่องลายเซ็น</span>`,
-        confirmButtonColor: '#2563eb',
-        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
-      });
-      return false;
-    }
-  }
+        const chk = document.getElementById('agreeTerms');
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+
+        if (!chk.checked) {
+          Swal.fire({
+            icon: 'warning',
+            title: '⚠️ กรุณายอมรับเงื่อนไข',
+            html: `<span style="color:red">อ่านเงื่อนไขและข้อตกลงก่อนส่งคำร้อง</span>`,
+            width: 'clamp(300px, 90%, 420px)',
+            confirmButtonColor: '#2563eb',
+            customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+          });
+          return false;
+        }
+
+        // ✅ ตรวจสอบว่าลายเซ็นว่างหรือไม่จริง ๆ
+        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let isSigned = false;
+        for (let i = 0; i < pixels.length; i += 4) {
+          if (pixels[i + 3] !== 0 && (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255)) {
+            isSigned = true;
+            break;
+          }
+        }
+
+        if (!isSigned) {
+          Swal.fire({
+            icon: 'warning',
+            title: '⚠️ กรุณาลงลายเซ็นก่อนคำร้อง',
+            html: `<span style="color:red">โปรดลงลายมือชื่อในช่องที่กำหนด</span>`,
+            width: 'clamp(300px, 90%, 420px)',
+            confirmButtonColor: '#2563eb',
+            customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+          });
+          return false;
+        }
+      }
 
   return true;
 }
