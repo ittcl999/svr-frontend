@@ -376,7 +376,7 @@ function validateForm() {
             Swal.fire({
               icon: 'error',
               title: `❌ ไม่พบข้อมูลผู้ร่วมเข้างาน`,
-              html: `<span style="color:red">ไม่สามารถดำเนินการต่อได้<br>เนื่องจากผู้ร่วมเข้างานลำดับ #${num} ไม่มีข้อมูลในระบบ</span><br>ให้ทำการแบบทดสอบประเมินความเข้าใจ<br><a href="${SCRIPT_URL}?action=tested" target="_blank">คลิกเพื่อเข้าสู่แบบทดสอบ</a>`,
+              html: `<span style="color:red">ไม่สามารถดำเนินการต่อได้<br>เนื่องจากผู้ร่วมเข้างานลำดับ #${num} ไม่มีข้อมูลในระบบ</span><br>ให้ทำการแบบทดสอบประเมินความเข้าใจ<br><a href="tested.html" target="_blank">คลิกเพื่อเข้าสู่แบบทดสอบ</a>`,
               width: 'clamp(300px, 90%, 420px)',
               confirmButtonColor: '#2563eb',
               customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
