@@ -133,34 +133,12 @@ function resizeCanvas() {
   canvas.height = 150;
 }
 
-// ✅ เพิ่มฟังก์ชันนี้เพื่อไม่ให้เกิด error
-function validateForm() {
-  const currentTabEl = document.getElementsByClassName("tab")[currentTab];
-  const inputs = currentTabEl.querySelectorAll("input, textarea, select");
-  let valid = true;
+let currentTab = 0;
 
-  inputs.forEach(input => {
-    if (input.hasAttribute("required") && !input.value) {
-      input.classList.add("invalid");
-      valid = false;
-    } else {
-      input.classList.remove("invalid");
-    }
-  });
-
-  if (!valid) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'กรอกข้อมูลไม่ครบ',
-      text: 'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วนก่อนดำเนินการต่อ',
-      confirmButtonColor: '#2563eb',
-      customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
-    });
-  }
-
-  return valid;
-}
-
+document.addEventListener("DOMContentLoaded", () => {
+  showTab(currentTab);
+  resizeCanvas();
+});
 
 function showTab(n) {
   const tabs = document.getElementsByClassName('tab');
@@ -189,6 +167,151 @@ function nextPrev(n) {
   }
   showTab(currentTab);
 }
+
+function validateForm() {
+  const fieldNames = {
+    input1: "เลขบัตรประชาชน",
+    input2: "ชื่อ-นามสกุล",
+    input3: "บริษัท",
+    input4: "เบอร์โทร",
+    input5: "Email",
+    input6: "เกี่ยวกับโครงการ/ระบบ",
+    input7: "วัตถุประสงค์",
+    input8: "วันที่เริ่มต้น",
+    input9: "วันที่สิ้นสุด",
+    Time_in: "เวลาเริ่มต้น",
+    Time_out: "เวลาสิ้นสุด"
+  };
+
+  const inputs = document.querySelectorAll('.tab.active input[required], .tab.active textarea[required]');
+  for (const inp of inputs) {
+    const val = inp.value.trim();
+    let label = fieldNames[inp.id] || 'ช่องที่จำเป็นต้องกรอก';
+    if (!val) {
+      Swal.fire({
+        icon: 'warning',
+        title: `กรุณากรอก "${label}"`,
+        html: `<span style="color:red">จำเป็นต้องกรอก ${label}</span><br>ก่อนดำเนินการต่อ`,
+        width: 'clamp(300px, 90%, 420px)',
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      });
+      return false;
+    }
+
+    if (inp.id === 'input1') {
+      const cid = inp.dataset.raw || '';
+      if (cid.length !== 13) {
+        Swal.fire({
+          icon: 'warning',
+          title: '❌ เลขบัตรประชาชนไม่ถูกต้อง',
+          html: `<span style="color:red">กรุณากรอกเลขบัตรให้ครบ 13 หลัก</span>`,
+          width: 'clamp(300px, 90%, 420px)',
+          confirmButtonColor: '#2563eb',
+          customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+        });
+        return false;
+      }
+    }
+  }
+
+  // ✅ Step 2: เวลาและวันที่
+  if (currentTab === 1) {
+    const t1 = document.getElementById('Time_in').value;
+    const t2 = document.getElementById('Time_out').value;
+    if (t1 && t2 && t1 >= t2) {
+      Swal.fire({
+        icon: 'warning',
+        title: '⚠️ เวลาสิ้นสุดต้องมากกว่าเวลาเริ่มต้น',
+        width: 'clamp(300px, 90%, 420px)',
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      });
+      return false;
+    }
+
+    const d1 = document.getElementById('input8').value;
+    const d2 = document.getElementById('input9').value;
+    if (d1 && d2 && d2 < d1) {
+      Swal.fire({
+        icon: 'warning',
+        title: '❌ วันที่สิ้นสุดไม่ถูกต้อง',
+        html: `<span style="color:red">วันที่สิ้นสุดต้องไม่ก่อนวันที่เริ่มต้น</span>`,
+        width: 'clamp(300px, 90%, 420px)',
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      });
+      return false;
+    }
+  }
+
+  // ✅ Step 3: ตรวจผู้ร่วมงาน
+  if (currentTab === 2) {
+    const people = document.querySelectorAll('.person-row');
+    if (people.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: '⚠️ กรุณาเพิ่มผู้ร่วมเข้างาน',
+        html: `<span style="color:red">ต้องมีผู้ร่วมงานอย่างน้อย 1 คน</span>`,
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      });
+      return false;
+    }
+
+    for (let i = 0; i < people.length; i++) {
+      const inp = people[i].querySelector('input[type="text"]');
+      const cid = inp.dataset.raw || '';
+      const name = inp.dataset.name || '';
+      if (cid.length !== 13 || !name) {
+        Swal.fire({
+          icon: 'warning',
+          title: `❌ ข้อมูลผู้ร่วมงานลำดับ #${i + 1} ไม่สมบูรณ์`,
+          html: `<span style="color:red">กรุณากรอกเลขบัตรให้ครบ 13 หลัก และต้องมีข้อมูลในระบบ</span>`,
+          confirmButtonColor: '#2563eb',
+          customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+        });
+        return false;
+      }
+    }
+  }
+
+  // ✅ Step 4: ต้องแนบหนังสือนำ
+  if (currentTab === 3) {
+    const file1 = document.getElementById('file1').files[0];
+    if (!file1) {
+      Swal.fire({
+        icon: 'warning',
+        title: '⚠️ กรุณาแนบไฟล์หนังสือนำ',
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      });
+      return false;
+    }
+  }
+
+  // ✅ Step 5: ตรวจลายเซ็น
+  if (currentTab === 4) {
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const hasDrawing = Array.from(pixels).some((v, i) => i % 4 === 3 && v !== 0);
+    if (!hasDrawing) {
+      Swal.fire({
+        icon: 'warning',
+        title: '⚠️ กรุณาลงลายเซ็น',
+        html: `<span style="color:red">โปรดเซ็นชื่อในช่องลายเซ็น</span>`,
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      });
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
 
 let currentTab = 0;
 document.addEventListener("DOMContentLoaded", () => {
