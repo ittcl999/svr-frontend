@@ -312,14 +312,6 @@ function validateForm() {
 }
 
 
-
-let currentTab = 0;
-document.addEventListener("DOMContentLoaded", () => {
-  showTab(currentTab);
-  resizeCanvas();
-});
-
-
 async function submitForm() {
   const form = document.getElementById('regForm');
 
