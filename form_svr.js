@@ -166,3 +166,106 @@ document.addEventListener("DOMContentLoaded", () => {
   showTab(currentTab);
   resizeCanvas();
 });
+
+
+async function submitForm() {
+  const form = document.getElementById('regForm');
+
+  if (!document.getElementById('agreeTerms').checked) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'กรุณายอมรับเงื่อนไข',
+      text: 'คุณต้องยอมรับเงื่อนไขก่อนส่งคำร้อง',
+      confirmButtonColor: '#2563eb',
+      customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
+    });
+    return;
+  }
+
+  Swal.fire({
+    title: 'กำลังส่งคำร้องขอ...',
+    text: 'กรุณารอสักครู่',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading(),
+    width: 'clamp(300px, 90%, 420px)',
+    customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
+  });
+
+  try {
+    // อ่านไฟล์เป็น base64
+    const encodeFile = file => new Promise(resolve => {
+      if (!file) return resolve(null);
+      const reader = new FileReader();
+      reader.onload = () => resolve({
+        name: file.name,
+        type: file.type,
+        content: reader.result.split(',')[1]
+      });
+      reader.readAsDataURL(file);
+    });
+
+    const file1 = document.getElementById('file1').files[0];
+    const file2 = document.getElementById('file2').files[0];
+
+    const file1Data = await encodeFile(file1);
+    const file2Data = await encodeFile(file2);
+
+    // ลายเซ็น base64
+    const canvas = document.getElementById('signature-pad');
+    const signatureData = canvas.toDataURL('image/png').split(',')[1];
+
+    // ดึงรายการผู้ร่วมงาน
+    const personnelList = Array.from(document.querySelectorAll('.person-row')).map(row => {
+      const input = row.querySelector('input[type="text"]');
+      return { cid: input.dataset.raw };
+    });
+
+    const payload = {
+      input1: form.input1.value,
+      input2: form.input2.value,
+      input3: form.input3.value,
+      input4: form.input4.value,
+      input5: form.input5.value,
+      input6: form.input6.value,
+      input7: form.input7.value,
+      input8: form.input8.value,
+      input9: form.input9.value,
+      Time_in: form.Time_in.value,
+      Time_out: form.Time_out.value,
+      input10_1: form.input10_1.checked,
+      input10_2: form.input10_2.checked,
+      input12: form.input12.value,
+      file1: file1Data,
+      file2: file2Data,
+      signature: signatureData,
+      personnelList
+    };
+
+    const result = await postToGAS(payload);
+    Swal.close();
+
+    if (result?.status === "success") {
+      Swal.fire({
+        icon: 'success',
+        title: 'ส่งคำร้องเรียบร้อยแล้ว',
+        html: `หมายเลขคำร้อง: <b>${result.noSVR}</b>`,
+        confirmButtonColor: '#2563eb',
+        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+      }).then(() => {
+        window.location.href = `${SCRIPT_URL}?action=viewStatus&cid=${result.svrId}`;
+      });
+    } else {
+      throw new Error(result?.message || "ไม่สามารถส่งคำร้องได้");
+    }
+  } catch (err) {
+    Swal.close();
+    Swal.fire({
+      icon: 'error',
+      title: '❌ ส่งคำร้องไม่สำเร็จ',
+      text: err.message || 'เกิดข้อผิดพลาด',
+      confirmButtonColor: '#dc2626',
+      customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+    });
+  }
+}
+
