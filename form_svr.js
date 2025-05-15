@@ -133,6 +133,24 @@ function resizeCanvas() {
   canvas.height = 150;
 }
 
+// ✅ เพิ่มฟังก์ชันนี้เพื่อไม่ให้เกิด error
+function validateForm() {
+  const currentTabEl = document.getElementsByClassName("tab")[currentTab];
+  const inputs = currentTabEl.querySelectorAll("input, textarea, select");
+  let valid = true;
+
+  inputs.forEach(input => {
+    if (input.hasAttribute("required") && !input.value) {
+      input.classList.add("invalid");
+      valid = false;
+    } else {
+      input.classList.remove("invalid");
+    }
+  });
+
+  return valid;
+}
+
 function showTab(n) {
   const tabs = document.getElementsByClassName('tab');
   Array.from(tabs).forEach(t => t.classList.remove('active'));
