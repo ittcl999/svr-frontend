@@ -173,28 +173,34 @@ document.getElementById("quizForm").addEventListener("submit", function (e) {
     customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
   });
 
-  // ❗️ submitAnswers ยังใช้ fetch เพราะ JSONP ไม่รองรับ POST
-  // ถ้าจะหลีกเลี่ยง fetch ต้อง submit ผ่าน form HTML ซ่อนแทน (ยังไม่แนะนำ)
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify({ action: "submitAnswers", ...payload }),
-    headers: { "Content-Type": "application/json" }
-  })
-    .then(res => res.json())
-    .then(result => {
-      Swal.close();
-      document.getElementById("quizForm").style.display = "none";
-      document.getElementById("result").innerHTML = `
-        <h4 class="test-complete-message">คุณ ${payload.name} ได้ทำแบบทดสอบเรียบร้อยแล้ว</h4>
-        <button onclick="goTo('viewForm')" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>`;
-    })
-    .catch(err => {
-      Swal.close();
-      Swal.fire({ icon: 'error', title: '❌ เกิดข้อผิดพลาด', text: err.message });
-      submitBtn.disabled = false;
-      submitBtn.style.display = "inline-block";
-    });
+  const callbackSubmit = `jsonpSubmit_${Date.now()}`;
+  window[callbackSubmit] = function (result) {
+    delete window[callbackSubmit];
+    Swal.close();
+
+    document.getElementById("quizForm").style.display = "none";
+    document.getElementById("result").innerHTML = `
+      <h4 class="test-complete-message">คุณ ${payload.name} ได้ทำแบบทดสอบเรียบร้อยแล้ว</h4>
+      <button onclick="goTo('viewForm')" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>`;
+  };
+
+  const qs = new URLSearchParams({
+    action: "submitAnswers",
+    callback: callbackSubmit,
+    name: payload.name,
+    idCard: payload.idCard,
+    company: payload.company,
+    phone: payload.phone,
+    email: payload.email,
+    answers: JSON.stringify(payload.answers)
+  });
+
+  const script = document.createElement("script");
+  script.src = `${SCRIPT_URL}?${qs.toString()}`;
+  document.body.appendChild(script);
 });
+
+
 
 document.getElementById("idCard").addEventListener("input", function () {
   const v = this.value.replace(/\D/g, "").slice(0, 13);
