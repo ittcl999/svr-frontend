@@ -13,10 +13,22 @@ async function postToGAS(payload) {
 }
 
 // 🔍 Fetch worker by CID
-async function fetchWorkerByCID(cid) {
-  const res = await fetch(`${SCRIPT_URL}?action=checkWorkerFromCID&cid=${cid}`);
-  return res.json();
+function fetchWorkerByCID(cid) {
+  return new Promise((resolve, reject) => {
+    const callbackName = `jsonpCallback_${Date.now()}`;
+    window[callbackName] = function (res) {
+      resolve(res);
+      delete window[callbackName];
+      document.body.removeChild(script);
+    };
+
+    const script = document.createElement('script');
+    script.src = `${SCRIPT_URL}?action=checkWorkerFromCID&cid=${cid}&callback=${callbackName}`;
+    script.onerror = () => reject(new Error("โหลดข้อมูลไม่สำเร็จ"));
+    document.body.appendChild(script);
+  });
 }
+
 
 function formatIDCard(el) {
   let v = el.value.replace(/\D/g, '').slice(0, 13);
