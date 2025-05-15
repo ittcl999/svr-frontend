@@ -4,27 +4,13 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsE
 
 // 🔁 POST to GAS
 // ✅ JSONP version of postToGAS
-function postToGAS(payload) {
-  return new Promise((resolve, reject) => {
-    const callbackName = `jsonpSubmit_${Date.now()}`;
-    const script = document.createElement("script");
-
-    window[callbackName] = function (res) {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      resolve(res);
-    };
-
-    script.onerror = function () {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      reject(new Error("ส่งข้อมูลไม่สำเร็จ"));
-    };
-
-    const payloadStr = encodeURIComponent(JSON.stringify(payload));
-    script.src = `${SCRIPT_URL}?action=submitForm&payload=${payloadStr}&callback=${callbackName}`;
-    document.body.appendChild(script);
+async function postToGAS(payload) {
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "application/json" }
   });
+  return res.json();
 }
 
 // 🔍 Fetch worker by CID
