@@ -148,8 +148,19 @@ function validateForm() {
     }
   });
 
+  if (!valid) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'กรอกข้อมูลไม่ครบ',
+      text: 'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วนก่อนดำเนินการต่อ',
+      confirmButtonColor: '#2563eb',
+      customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
+    });
+  }
+
   return valid;
 }
+
 
 function showTab(n) {
   const tabs = document.getElementsByClassName('tab');
