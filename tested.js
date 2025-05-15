@@ -1,6 +1,11 @@
-// ✅ tested.js สำหรับเชื่อม backend ด้วย fetch แทน google.script.run
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec"; // 👈 เปลี่ยนเป็นของจริง
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbym5zxW382G2enqHVpsEkltXSCeaWEXdWmUqpz11Wxfi2pxp8Pg2SP9RmCbfDLtPU6T/exec";
 let questions = [];
+
+function jsonpRequest(url, callbackName) {
+  const script = document.createElement('script');
+  script.src = `${url}&callback=${callbackName}`;
+  document.body.appendChild(script);
+}
 
 async function startQuiz(event) {
   const startButton = event.target;
@@ -14,7 +19,6 @@ async function startQuiz(event) {
   const phone = document.getElementById("phone").value.trim();
   const email = document.getElementById("email").value.trim();
 
-  // ตรวจสอบข้อมูลพื้นฐาน
   const requiredFields = [
     { value: idCard, label: 'เลขบัตรประชาชน', length: 13 },
     { value: name, label: 'ชื่อ-นามสกุล' },
@@ -46,9 +50,9 @@ async function startQuiz(event) {
     customClass: { popup: 'swal2-border', title: 'swal2-title-custom' }
   });
 
-  try {
-    const res = await fetch(`${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`);
-    const status = await res.json();
+  const callbackCheck = `jsonpCheckStatus_${Date.now()}`;
+  window[callbackCheck] = function (status) {
+    delete window[callbackCheck];
     Swal.close();
 
     if (status.tested) {
@@ -65,31 +69,39 @@ async function startQuiz(event) {
       startButton.disabled = false;
       startButton.style.display = "inline-block";
     } else {
-      Swal.fire({
-        title: 'กำลังเข้าสู่แบบทดสอบ',
-        html: 'กรุณารอสักครู่...',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        didOpen: () => Swal.showLoading(),
-        width: 'clamp(300px, 90%, 420px)',
-        confirmButtonColor: '#2563eb',
-        customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
-      });
-
-      const qRes = await fetch(`${SCRIPT_URL}?action=getQuestions`);
-      questions = await qRes.json();
-
-      document.getElementById("quizForm").style.display = "block";
-      document.getElementById("infoForm").style.display = "none";
-      renderQuestions();
-      Swal.close();
+      getQuestionsJSONP(); // ดึงคำถามแบบ JSONP
     }
-  } catch (err) {
+  };
+
+  const url = `${SCRIPT_URL}?action=checkTestStatus&idCard=${idCard}`;
+  jsonpRequest(url, callbackCheck);
+}
+
+function getQuestionsJSONP() {
+  Swal.fire({
+    title: 'กำลังเข้าสู่แบบทดสอบ',
+    html: 'กรุณารอสักครู่...',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => Swal.showLoading(),
+    width: 'clamp(300px, 90%, 420px)',
+    confirmButtonColor: '#2563eb',
+    customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
+  });
+
+  const callbackQ = `jsonpQuestions_${Date.now()}`;
+  window[callbackQ] = function (qList) {
+    delete window[callbackQ];
+    questions = qList;
+
+    document.getElementById("quizForm").style.display = "block";
+    document.getElementById("infoForm").style.display = "none";
+    renderQuestions();
     Swal.close();
-    Swal.fire({ icon: 'error', title: '❌ เกิดข้อผิดพลาด', text: err.message });
-    startButton.disabled = false;
-    startButton.style.display = "inline-block";
-  }
+  };
+
+  const url = `${SCRIPT_URL}?action=getQuestions`;
+  jsonpRequest(url, callbackQ);
 }
 
 function renderQuestions() {
@@ -116,7 +128,7 @@ function renderQuestions() {
   });
 }
 
-document.getElementById("quizForm").addEventListener("submit", async function (e) {
+document.getElementById("quizForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const submitBtn = e.target.querySelector("button[type='submit']");
@@ -161,26 +173,27 @@ document.getElementById("quizForm").addEventListener("submit", async function (e
     customClass: { title: 'swal2-title-custom', popup: 'swal2-border' }
   });
 
-  try {
-    const res = await fetch(SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: "submitAnswers", ...payload }),
-      headers: { "Content-Type": "application/json" }
+  // ❗️ submitAnswers ยังใช้ fetch เพราะ JSONP ไม่รองรับ POST
+  // ถ้าจะหลีกเลี่ยง fetch ต้อง submit ผ่าน form HTML ซ่อนแทน (ยังไม่แนะนำ)
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({ action: "submitAnswers", ...payload }),
+    headers: { "Content-Type": "application/json" }
+  })
+    .then(res => res.json())
+    .then(result => {
+      Swal.close();
+      document.getElementById("quizForm").style.display = "none";
+      document.getElementById("result").innerHTML = `
+        <h4 class="test-complete-message">คุณ ${payload.name} ได้ทำแบบทดสอบเรียบร้อยแล้ว</h4>
+        <button onclick="goTo('viewForm')" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>`;
+    })
+    .catch(err => {
+      Swal.close();
+      Swal.fire({ icon: 'error', title: '❌ เกิดข้อผิดพลาด', text: err.message });
+      submitBtn.disabled = false;
+      submitBtn.style.display = "inline-block";
     });
-    const result = await res.json();
-
-    Swal.close();
-    document.getElementById("quizForm").style.display = "none";
-    document.getElementById("result").innerHTML = `
-      <h4 class="test-complete-message">คุณ ${payload.name} ได้ทำแบบทดสอบเรียบร้อยแล้ว</h4>
-      <button onclick="goTo('viewForm')" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>`;
-
-  } catch (err) {
-    Swal.close();
-    Swal.fire({ icon: 'error', title: '❌ เกิดข้อผิดพลาด', text: err.message });
-    submitBtn.disabled = false;
-    submitBtn.style.display = "inline-block";
-  }
 });
 
 document.getElementById("idCard").addEventListener("input", function () {
