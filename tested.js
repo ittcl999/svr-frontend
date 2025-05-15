@@ -181,7 +181,7 @@ document.getElementById("quizForm").addEventListener("submit", function (e) {
     document.getElementById("quizForm").style.display = "none";
     document.getElementById("result").innerHTML = `
       <h4 class="test-complete-message">คุณ ${payload.name} ได้ทำแบบทดสอบเรียบร้อยแล้ว</h4>
-      <button onclick="goTo('viewForm')" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>`;
+      <button onclick="window.location.href='form_svr.html'" class="btn btn-info">📄 แบบฟอร์มขออนุญาตเข้าพื้นที่</button>`;
   };
 
   const qs = new URLSearchParams({
